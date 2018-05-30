@@ -6,7 +6,7 @@ extract_xml <- function(path) {
   ppt_splt <- strsplit(path, "/")
   ppt <- map_chr(ppt_splt, ~.[length(.)])
 
-  xml_folder <- paste0(gsub("\\.pptx", "", ppt), "_xml")
+  xml_folder <- paste0(gsub("\\.pptx| ", "", ppt), "_xml")
   dir.create(xml_folder, showWarnings = FALSE)
   dir.create("assets", showWarnings = FALSE)
 
