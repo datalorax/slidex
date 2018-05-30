@@ -8,6 +8,7 @@ extract_xml <- function(path) {
 
   xml_folder <- paste0(gsub("\\.pptx", "", ppt), "_xml")
   dir.create(xml_folder, showWarnings = FALSE)
+  dir.create("assets", showWarnings = FALSE)
 
   file.copy(path, file.path(xml_folder, ppt))
   file.rename(file.path(xml_folder, ppt),
@@ -17,12 +18,15 @@ extract_xml <- function(path) {
         exdir = xml_folder)
 
   if(file.exists(file.path(xml_folder, "ppt", "media"))) {
-    dir.create("assets", showWarnings = FALSE)
     dir.create(file.path("assets", "img"), showWarnings = FALSE)
     file.rename(file.path(xml_folder, "ppt", "media"),
-              file.path("assets", "img"))
+                file.path("assets", "img"))
   }
-
+  if(file.exists(file.path(xml_folder, "ppt", "embeddings"))) {
+    dir.create(file.path("assets", "data"), showWarnings = FALSE)
+    file.rename(file.path(xml_folder, "ppt", "embeddings"),
+                file.path("assets", "data"))
+  }
   rels <- list.files(file.path(xml_folder, "ppt", "slides", "_rels"),
                      full.names = TRUE)
 
@@ -144,17 +148,20 @@ extract_body <- function(sld) {
            indents = as.numeric(
              map_chr(.data$indents, ~ifelse(length(.) > 0, ., "0"))),
            bullet  = map(.data$xml, ~xml_find_all(., "./a:pPr/a:buNone")),
-           bullet  = -1*(map_dbl(.data$bullet, .data$length) - 1),
+           bullet  = -1*(map_dbl(.data$bullet, length) - 1),
            bullet  = ifelse(.data$nchar == 0, 0, .data$bullet),
-           spaces = map(.data$indents, ~paste0(paste0(rep(" ", .*2),
+           spaces = map(.data$indents, ~paste0(paste0(rep("\t", .),
                                                 collapse = ""), "+")),
+           # spaces = ifelse(.data$indents > 2,
+           #                 paste0("\t", .data$spaces),
+           #                 .data$spaces),
            spaces = ifelse(.data$bullet == 0, "", .data$spaces),
            text   = ifelse(.data$bullet != 0, paste(.data$spaces, .data$text), .data$text),
            text   = ifelse(.data$bullet == 0, paste0("\n", .data$text), .data$text)) %>%
     select(.data$text) %>%
     unnest()
 
-  text <- map(.data$text, ~.[. != "\n"])
+  text <- map(text, ~.[. != "\n"])
   paste0(text$text, collapse = "\n")
 }
 
@@ -166,8 +173,8 @@ extract_body <- function(sld) {
 #' @param rel xml \code{rel} code for the slide
 #' @param attr Attribute to extract. Currently takes two valide arguments:
 #'   \code{"image"} or \code{"link"} to extract images or links, respectively.
-#'
-extract_attr <- function(rel, attr) {
+
+extract_attr <- function(rel, attr, sld) {
   types  <- map(xml_children(rel), ~xml_attr(., "Type"))
   target <- map(xml_children(rel), ~xml_attr(., "Target"))
 
@@ -176,8 +183,13 @@ extract_attr <- function(rel, attr) {
   }
 
   if(attr == "link") {
+    ar <- xml_find_all(sld, "//a:r")
+    select <- xml_find_all(ar, "./a:rPr") %>%
+      map(~xml_find_all(., "./a:hlinkClick")) %>%
+      map_lgl(~length(.) > 0 )
+
     links <- target[grep("hyperlink", types)]
-    out <- paste0("[", links, "]", "(", links, ")", collapse = "\n")
+    out <- paste0("[", xml_text(ar)[select], "]", "(", links, ")", collapse = "\n")
   }
   if(attr == "image") {
     imgs <- target[grep("image", types)]
@@ -185,10 +197,18 @@ extract_attr <- function(rel, attr) {
     imgs <- map_chr(splt, ~map_chr(., ~.[[length(.)]]))
 
     out <- paste0("![](assets/img/", imgs, ")")
+    if(length(out) == 2) {
+      out <- paste0(".pull-left[", out[1], "]", "\n\n",
+                    ".pull-right[", out[2], "]")
+    }
+    if(length(out) > 2) {
+      out <- paste0("---\nclass: inverse\nbackground-image: url('assets/img/",
+                    imgs, "')\nbackground-size: cover\n",
+                    collapse = "\n")
+    }
   }
   out
 }
-
 
 #' Extract tables from slides
 #'
@@ -240,7 +260,7 @@ tribble_code <- function(df, tbl_num = "") {
            paste(out, collapse = ",\n"), "\n)"),
     "\n\n",
     paste0("kableExtra::kable_styling(knitr::kable(tbl", tbl_num, "), ",
-                                      "font_size = 10)"),
+                                      "font_size = 18)"),
     "\n```"
   )
 }
