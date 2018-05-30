@@ -28,12 +28,13 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
             extract_title(.x),
             extract_body(.x),
             tribble_code(extract_table(.x), tbl_num = .z),
-            extract_attr(.y, "image"),
-            extract_attr(.y, "link"),
+            extract_attr(.y, "image", .x),
+            extract_attr(.y, "link", .x),
             sep = "\n")
       )
   sink()
-  file.remove(xml)
+  unlink("slidedemo_xml", recursive = TRUE)
   system(paste("open", rmd))
 }
+
 
