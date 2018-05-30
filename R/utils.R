@@ -173,6 +173,7 @@ extract_body <- function(sld) {
 #' @param rel xml \code{rel} code for the slide
 #' @param attr Attribute to extract. Currently takes two valide arguments:
 #'   \code{"image"} or \code{"link"} to extract images or links, respectively.
+#' @param sld xml code for the slide to extract the title from
 
 extract_attr <- function(rel, attr, sld) {
   types  <- map(xml_children(rel), ~xml_attr(., "Type"))

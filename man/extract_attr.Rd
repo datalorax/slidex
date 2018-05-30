@@ -4,13 +4,15 @@
 \alias{extract_attr}
 \title{Extract Attributes from the corresponding slide}
 \usage{
-extract_attr(rel, attr)
+extract_attr(rel, attr, sld)
 }
 \arguments{
 \item{rel}{xml \code{rel} code for the slide}
 
 \item{attr}{Attribute to extract. Currently takes two valide arguments:
 \code{"image"} or \code{"link"} to extract images or links, respectively.}
+
+\item{sld}{xml code for the slide to extract the title from}
 }
 \description{
 Extract Attributes from the corresponding slide
