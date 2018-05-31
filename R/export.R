@@ -1,13 +1,16 @@
 #' Extract xml from pptx
 #'
 #' @param path Path to the Microsoft PowerPoint file
+#' @param force If an 'assets' folder already exists in the current directory,
+#'   (e.g., from a previous conversion) should it be overwritten? Defaults to
+#'   \code{FALSE}.
 #' @inheritParams create_yaml
 #' @export
 #'
 convert_pptx <- function(path, author, title = NULL, sub = NULL,
                          date = Sys.Date(), theme = "default",
-                         highlightStyle = "github") {
-  xml  <- extract_xml(path)
+                         highlightStyle = "github", force = FALSE) {
+  xml  <- extract_xml(path, force = force)
   slds <- import_slide_xml(xml)
   rels <- import_rel_xml(xml)
 

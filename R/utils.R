@@ -1,13 +1,31 @@
 #' Extract xml from pptx
 #'
 #' @param path Path to the Microsoft PowerPoint file
+#' @param force If an 'assets' folder already exists in the current directory,
+#'   (e.g., from a previous conversion) should it be overwritten? Defaults to
+#'   \code{FALSE}.
 
-extract_xml <- function(path) {
+extract_xml <- function(path, force = FALSE) {
   ppt_splt <- strsplit(path, "/")
   ppt <- map_chr(ppt_splt, ~.[length(.)])
 
   xml_folder <- paste0(gsub("\\.pptx| ", "", ppt), "_xml")
+
+  if(file.exists(xml_folder)) {
+    unlink(xml_folder, recursive = TRUE)
+  }
   dir.create(xml_folder, showWarnings = FALSE)
+
+  if(file.exists("assets") & force == FALSE) {
+    stop(paste0("This function will create an assets folder in this ",
+                "directory, but a folder named 'assets' already exists here. ",
+                "Please move/delete the assets folder, or rerun with ",
+                "`force = TRUE` to force the function to overwrite the ",
+                "existing folder and all the files within it."))
+  }
+  if(file.exists("assets") & force == TRUE) {
+    unlink("assets", recursive = TRUE)
+  }
   dir.create("assets", showWarnings = FALSE)
 
   file.copy(path, file.path(xml_folder, ppt))
@@ -174,15 +192,44 @@ extract_body <- function(sld) {
 #' @param attr Attribute to extract. Currently takes two valide arguments:
 #'   \code{"image"} or \code{"link"} to extract images or links, respectively.
 #' @param sld xml code for the slide to extract the title from
-
-extract_attr <- function(rel, attr, sld) {
+rel <- rels[[10]]
+sld <- slds[[10]]
+extract_attr <- function(rel, attr, sld, xml_folder) {
   types  <- map(xml_children(rel), ~xml_attr(., "Type"))
   target <- map(xml_children(rel), ~xml_attr(., "Target"))
 
   if(length(target[grep(attr, types)]) == 0) {
     return()
   }
+  if(attr == "chart") {
+    chart_path <- map_chr(target[grep(attr, types)], ~gsub("\\.\\./", "", .))
+    chart_path <- map(chart_path, ~c(xml_folder,
+                                     "ppt",
+                                     str_split(., "/")[[1]])) %>%
+      unlist(recursive = FALSE) %>%
+      reduce(file.path)
 
+    chart_xml <- map(chart_path, read_xml)
+
+    data <- map(chart_xml, ~xml_find_all(., "//cx:data"))
+
+    x_data <- map(data, ~map(., ~xml_find_all(., "./cx:strDim/cx:lvl/cx:pt"))) %>%
+      map(~map(., xml_text)) %>%
+      unlist(x_data, recursive = FALSE) %>%
+      setNames(paste0("V", seq_along(.))) %>%
+      as.data.frame() %>%
+      gather(id, x)
+
+    y_data <- map(data, ~map(., ~xml_find_all(., "./cx:numDim/cx:lvl/cx:pt"))) %>%
+      map(~map(., xml_text)) %>%
+      unlist(recursive = FALSE) %>%
+      setNames(paste0("V", seq_along(.))) %>%
+      as.data.frame() %>%
+      gather(id, y)
+
+    full_join(x_data, y_data)
+
+  }
   if(attr == "link") {
     ar <- xml_find_all(sld, "//a:r")
     select <- xml_find_all(ar, "./a:rPr") %>%
@@ -289,9 +336,11 @@ create_yaml <- function(title_sld, author, title = NULL, sub = NULL,
                         highlightStyle = "github") {
   if(is.null(title)) {
     ttl  <- extract_title(title_sld)
-    ttl  <- paste0("title: ", gsub("\t|\n", "", substr(ttl, 3, nchar(ttl))))
+    ttl  <- paste0("title: '",
+                   gsub("\t|\n", "", substr(ttl, 3, nchar(ttl))),
+                   "'")
   }
-  if(!is.null(title)) ttl <- paste0("title: ", title)
+  if(!is.null(title)) ttl <- paste0("title: '", title, "'")
   if(!is.null(sub)) sub  <- paste0("subtitle: ", sub)
 
   date <- paste0("date: ", date)

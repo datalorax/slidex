@@ -24,3 +24,31 @@ The package is not yet on CRAN. Install the development version with
 ``` r
 devtools::install_github("datalorax/slidex")
 ```
+
+## Basic usage
+
+At present, the package exports a single function, `convert_pptx`, which
+takes two required argument: the `path` to the PPTX file (passed as a
+string), and the `author` (also passed as a sting). For example:
+
+``` r
+library(slidex)
+convert_pptx(path = "inst/examples/slidedemo.pptx",
+             author = "Daniel Anderson")
+```
+
+You can optionally pass additional arguments, such as `theme` (see a
+list of themes
+[here](https://github.com/yihui/xaringan/tree/master/inst/rmarkdown/templates/xaringan/resources))
+or a new `title`.
+
+![](docs/slidex-preview.mov)
+
+## Suggested pacakges
+
+Although not a dependency, the package functionally requires the
+[xaringan](https://github.com/yihui/xaringan) package, and works best if
+both the [knitr](https://github.com/yihui/knitr) and
+[kableExtra](https://github.com/haozhu233/kableExtra) packages are
+installed. Without the latter two, tables will not be produced, although
+the code to create a dataframe from the tables will still be embedded.
