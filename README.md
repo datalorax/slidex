@@ -40,9 +40,10 @@ convert_pptx(path = "inst/examples/slidedemo.pptx",
 You can optionally pass additional arguments, such as `theme` (see a
 list of themes
 [here](https://github.com/yihui/xaringan/tree/master/inst/rmarkdown/templates/xaringan/resources))
-or a new `title`.
+or a new
+`title`.
 
-![](docs/slidex-preview.mov)
+![](https://raw.githubusercontent.com/datalorax/slidex/master/docs/slidex-preview.mov)
 
 ## Suggested pacakges
 
