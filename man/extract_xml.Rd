@@ -4,10 +4,14 @@
 \alias{extract_xml}
 \title{Extract xml from pptx}
 \usage{
-extract_xml(path)
+extract_xml(path, force = FALSE)
 }
 \arguments{
 \item{path}{Path to the Microsoft PowerPoint file}
+
+\item{force}{If an 'assets' folder already exists in the current directory,
+(e.g., from a previous conversion) should it be overwritten? Defaults to
+\code{FALSE}.}
 }
 \description{
 Extract xml from pptx
