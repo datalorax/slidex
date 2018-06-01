@@ -192,44 +192,46 @@ extract_body <- function(sld) {
 #' @param attr Attribute to extract. Currently takes two valide arguments:
 #'   \code{"image"} or \code{"link"} to extract images or links, respectively.
 #' @param sld xml code for the slide to extract the title from
-rel <- rels[[10]]
-sld <- slds[[10]]
-extract_attr <- function(rel, attr, sld, xml_folder) {
+
+# xml_folder will need to be another argument if the commented code below is
+# incorporated
+
+extract_attr <- function(rel, attr, sld) {
   types  <- map(xml_children(rel), ~xml_attr(., "Type"))
   target <- map(xml_children(rel), ~xml_attr(., "Target"))
 
   if(length(target[grep(attr, types)]) == 0) {
     return()
   }
-  if(attr == "chart") {
-    chart_path <- map_chr(target[grep(attr, types)], ~gsub("\\.\\./", "", .))
-    chart_path <- map(chart_path, ~c(xml_folder,
-                                     "ppt",
-                                     str_split(., "/")[[1]])) %>%
-      unlist(recursive = FALSE) %>%
-      reduce(file.path)
-
-    chart_xml <- map(chart_path, read_xml)
-
-    data <- map(chart_xml, ~xml_find_all(., "//cx:data"))
-
-    x_data <- map(data, ~map(., ~xml_find_all(., "./cx:strDim/cx:lvl/cx:pt"))) %>%
-      map(~map(., xml_text)) %>%
-      unlist(x_data, recursive = FALSE) %>%
-      setNames(paste0("V", seq_along(.))) %>%
-      as.data.frame() %>%
-      gather(id, x)
-
-    y_data <- map(data, ~map(., ~xml_find_all(., "./cx:numDim/cx:lvl/cx:pt"))) %>%
-      map(~map(., xml_text)) %>%
-      unlist(recursive = FALSE) %>%
-      setNames(paste0("V", seq_along(.))) %>%
-      as.data.frame() %>%
-      gather(id, y)
-
-    full_join(x_data, y_data)
-
-  }
+  # if(attr == "chart") {
+  #   chart_path <- map_chr(target[grep(attr, types)], ~gsub("\\.\\./", "", .))
+  #   chart_path <- map(chart_path, ~c(xml_folder,
+  #                                    "ppt",
+  #                                    str_split(., "/")[[1]])) %>%
+  #     unlist(recursive = FALSE) %>%
+  #     reduce(file.path)
+  #
+  #   chart_xml <- map(chart_path, read_xml)
+  #
+  #   data <- map(chart_xml, ~xml_find_all(., "//cx:data"))
+  #
+  #   x_data <- map(data, ~map(., ~xml_find_all(., "./cx:strDim/cx:lvl/cx:pt"))) %>%
+  #     map(~map(., xml_text)) %>%
+  #     unlist(x_data, recursive = FALSE) %>%
+  #     setNames(paste0("V", seq_along(.))) %>%
+  #     as.data.frame() %>%
+  #     gather(id, x)
+  #
+  #   y_data <- map(data, ~map(., ~xml_find_all(., "./cx:numDim/cx:lvl/cx:pt"))) %>%
+  #     map(~map(., xml_text)) %>%
+  #     unlist(recursive = FALSE) %>%
+  #     setNames(paste0("V", seq_along(.))) %>%
+  #     as.data.frame() %>%
+  #     gather(id, y)
+  #
+  #   full_join(x_data, y_data)
+  #
+  # }
   if(attr == "link") {
     ar <- xml_find_all(sld, "//a:r")
     select <- xml_find_all(ar, "./a:rPr") %>%
