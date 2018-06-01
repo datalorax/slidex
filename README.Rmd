@@ -43,7 +43,7 @@ convert_pptx(path = "inst/examples/slidedemo.pptx",
 
 You can optionally pass additional arguments, such as `theme` (see a list of themes [here](https://github.com/yihui/xaringan/tree/master/inst/rmarkdown/templates/xaringan/resources)) or a new `title`. 
 
-![](https://raw.githubusercontent.com/datalorax/slidex/master/docs/slidex-preview.gif)
+![](https://github.com/datalorax/slidex/raw/master/docs/slidex-preview.gif)
 
 ## Suggested pacakges
 Although not a dependency, the package functionally requires the [xaringan](https://github.com/yihui/xaringan) package, and works best if both the [knitr](https://github.com/yihui/knitr) and [kableExtra](https://github.com/haozhu233/kableExtra) packages are installed. Without the latter two, tables will not be produced, although the code to create a dataframe from the tables will still be embedded.

@@ -43,7 +43,7 @@ list of themes
 or a new
 `title`.
 
-![](https://raw.githubusercontent.com/datalorax/slidex/master/docs/slidex-preview.mov)
+![](https://github.com/datalorax/slidex/raw/master/docs/slidex-preview.gif)
 
 ## Suggested pacakges
 
