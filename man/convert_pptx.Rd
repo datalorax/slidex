@@ -5,7 +5,7 @@
 \title{Extract xml from pptx}
 \usage{
 convert_pptx(path, author, title = NULL, sub = NULL, date = Sys.Date(),
-  theme = "default", highlightStyle = "github")
+  theme = "default", highlightStyle = "github", force = FALSE)
 }
 \arguments{
 \item{path}{Path to the Microsoft PowerPoint file}
@@ -28,6 +28,10 @@ manipulated after conversion if you want other fonts with a specific theme.}
 
 \item{highlightStyle}{The code highlighting style. Defaults to
 \code{"github"} flavored highlighting}
+
+\item{force}{If an 'assets' folder already exists in the current directory,
+(e.g., from a previous conversion) should it be overwritten? Defaults to
+\code{FALSE}.}
 }
 \description{
 Extract xml from pptx
