@@ -33,6 +33,7 @@ string), and the `author` (also passed as a sting). For example:
 
 ``` r
 library(slidex)
+pptx <- system.file("examples", "slidedemo.pptx", package = "slidex")
 convert_pptx(path = "inst/examples/slidedemo.pptx",
              author = "Daniel Anderson")
 ```
@@ -45,7 +46,7 @@ or a new
 
 ![](https://github.com/datalorax/slidex/raw/master/docs/slidex-preview.gif)
 
-## Suggested pacakges
+## Suggested packages
 
 Although not a dependency, the package functionally requires the
 [xaringan](https://github.com/yihui/xaringan) package, and works best if
@@ -53,3 +54,31 @@ both the [knitr](https://github.com/yihui/knitr) and
 [kableExtra](https://github.com/haozhu233/kableExtra) packages are
 installed. Without the latter two, tables will not be produced, although
 the code to create a dataframe from the tables will still be embedded.
+
+## Things the package **should** be able to do
+
+  - Maintain bulleting levels
+  - Maintain bolding and italicizing (no support for underlining yet)
+  - Maintain pictures
+  - Maintain links (slighlty imperfect currently)
+
+## Things the package does not yet do, but hopefully will
+
+  - Pull notes from slides (this is pretty straightforward, just still
+    needs to be implemented)
+  - Pull data and potentially reproduce plots (some support for this
+    already, look in “assets/data” if you have a chart and want the data
+    from it)
+  - Convert `emf` file types to `png`s. This is a Microsoft proprietary
+    format and will require users have LibreOffice installed.
+  - Support multiple authors (just needs to be implemented)
+  - Maintain two-panel layouts (also should be relatively
+    straightforward)
+  - Support both .ppt and .pptx file types. Currently only the latter is
+    supported. Will require LibreOffice.
+
+## Other ideas?
+
+I’d love to hear from you if you’ve used the package and had success or
+you’ve struggled. Either way, feedback, particularly at this early
+stage, would be greatly appreciated.
