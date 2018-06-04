@@ -187,18 +187,19 @@ extract_body <- function(sld) {
                           .data$first),
            indents = ifelse(.data$first == 1 & .data$bullet == 1,
                             0,
-                            .data$indents)) %>%
-    select(-.data$first)
+                            .data$indents))
 
   text <- text %>%
-    mutate(set = c(TRUE, na.omit(.data$bullet != lag(.data$bullet))),
+    mutate(set = .data$bullet != lag(.data$bullet),
+           set = ifelse(is.na(.data$set), TRUE, .data$set),
            set = cumsum(.data$set)) %>%
     group_by(.data$set) %>%
     mutate(flag = ifelse(.data$indents > lag(.data$indents) + 1,
                          1,
                          0),
-           flag = c(0, cumsum(na.omit(.data$flag))),
-           amount = max_amount(.data$indents - lag(.data$indents)),
+           flag = ifelse(is.na(.data$flag), 0, .data$flag),
+           flag = cumsum(.data$flag),
+           amount = max_amount(.data$indents - lag(.data$indents))*.data$flag,
            indents = ifelse(.data$indents > 1,
                             .data$indents - .data$amount,
                             .data$indents))
