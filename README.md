@@ -34,8 +34,8 @@ string), and the `author` (also passed as a sting). For example:
 ``` r
 library(slidex)
 pptx <- system.file("examples", "slidedemo.pptx", package = "slidex")
-convert_pptx(path = "inst/examples/slidedemo.pptx",
-             author = "Daniel Anderson")
+
+convert_pptx(path = pptx, author = "Daniel Anderson")
 ```
 
 You can optionally pass additional arguments, such as `theme` (see a

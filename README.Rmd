@@ -38,8 +38,8 @@ At present, the package exports a single function, `convert_pptx`, which takes t
 ```{r example1, eval = FALSE}
 library(slidex)
 pptx <- system.file("examples", "slidedemo.pptx", package = "slidex")
-convert_pptx(path = "inst/examples/slidedemo.pptx",
-             author = "Daniel Anderson")
+
+convert_pptx(path = pptx, author = "Daniel Anderson")
 ```
 
 You can optionally pass additional arguments, such as `theme` (see a list of themes [here](https://github.com/yihui/xaringan/tree/master/inst/rmarkdown/templates/xaringan/resources)) or a new `title`. 
