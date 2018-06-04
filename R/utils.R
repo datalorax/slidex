@@ -112,6 +112,15 @@ extract_title <- function(sld) {
   paste("# ", title, "\n")
 }
 
+# This function is only used within the extract_body function
+max_amount <- function(x) {
+  x <- na.omit(x)
+  if(length(x) == 0) {
+    return(0)
+  }
+  max(x) - 1
+}
+
 #' Extract the body of the slide
 #'
 #' @param sld xml code for the slide to extract the title from
@@ -167,15 +176,45 @@ extract_body <- function(sld) {
              map_chr(.data$indents, ~ifelse(length(.) > 0, ., "0"))),
            bullet  = map(.data$xml, ~xml_find_all(., "./a:pPr/a:buNone")),
            bullet  = -1*(map_dbl(.data$bullet, length) - 1),
-           bullet  = ifelse(.data$nchar == 0, 0, .data$bullet),
-           spaces = map(.data$indents, ~paste0(paste0(rep("\t", .),
-                                                collapse = ""), "+")),
-           # spaces = ifelse(.data$indents > 2,
-           #                 paste0("\t", .data$spaces),
-           #                 .data$spaces),
+           bullet  = ifelse(.data$nchar == 0,
+                            0,
+                            .data$bullet),
+           first = ifelse(lag(.data$bullet) == 0 & .data$bullet == 1,
+                          1,
+                          0),
+           first = ifelse(is.na(.data$first),
+                          1,
+                          .data$first),
+           indents = ifelse(.data$first == 1 & .data$bullet == 1,
+                            0,
+                            .data$indents)) %>%
+    select(-.data$first)
+
+  text <- text %>%
+    mutate(set = c(TRUE, na.omit(.data$bullet != lag(.data$bullet))),
+           set = cumsum(.data$set)) %>%
+    group_by(.data$set) %>%
+    mutate(flag = ifelse(.data$indents > lag(.data$indents) + 1,
+                         1,
+                         0),
+           flag = c(0, cumsum(na.omit(.data$flag))),
+           amount = max_amount(.data$indents - lag(.data$indents)),
+           indents = ifelse(.data$indents > 1,
+                            .data$indents - .data$amount,
+                            .data$indents))
+
+  text <- text %>%
+    ungroup() %>%
+    mutate(spaces = map(.data$indents, ~paste0(paste0(rep("\t", .),
+                                                      collapse = ""),
+                                               "+")),
            spaces = ifelse(.data$bullet == 0, "", .data$spaces),
-           text   = ifelse(.data$bullet != 0, paste(.data$spaces, .data$text), .data$text),
-           text   = ifelse(.data$bullet == 0, paste0("\n", .data$text), .data$text)) %>%
+           text   = ifelse(.data$bullet != 0,
+                           paste(.data$spaces, .data$text),
+                           .data$text),
+           text   = ifelse(.data$bullet == 0,
+                           paste0("\n", .data$text),
+                           .data$text)) %>%
     select(.data$text) %>%
     unnest()
 
@@ -319,7 +358,8 @@ tribble_code <- function(df, tbl_num = "") {
 #' Matter
 #'
 #' @param title_sld The xml code for the title slide in the PPTX.
-#' @param author The author of the slide deck. Currently a required argument.
+#' @param author A string indicating th author or authors of the slide deck.
+#'   Multiple authors can be provided with a string vector.
 #' @param title Optional title of the slide deck. Defaults to the title of the
 #'   first slide in the deck.
 #' @param sub Optional subtitle
@@ -357,10 +397,17 @@ create_yaml <- function(title_sld, author, title = NULL, sub = NULL,
     css <- NULL
   }
 
+  if(length(author) == 1) {
+    auth <- paste0("author: ", author)
+  }
+  if(length(author) > 1) {
+    auth <- paste0("author:\n",
+                   paste0("  - ", author, collapse = "\n"))
+  }
   elements <- list("---",
                    ttl,
                    sub,
-                   paste0("author: ", author),
+                   auth,
                    date,
                    "output:",
                    "  xaringan::moon_reader:",
