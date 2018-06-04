@@ -11,7 +11,8 @@ create_yaml(title_sld, author, title = NULL, sub = NULL,
 \arguments{
 \item{title_sld}{The xml code for the title slide in the PPTX.}
 
-\item{author}{The author of the slide deck. Currently a required argument.}
+\item{author}{A string indicating th author or authors of the slide deck.
+Multiple authors can be provided with a string vector.}
 
 \item{title}{Optional title of the slide deck. Defaults to the title of the
 first slide in the deck.}
