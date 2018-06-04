@@ -71,7 +71,6 @@ the code to create a dataframe from the tables will still be embedded.
     from it)
   - Convert `emf` file types to `png`s. This is a Microsoft proprietary
     format and will require users have LibreOffice installed.
-  - Support multiple authors (just needs to be implemented)
   - Maintain two-panel layouts (also should be relatively
     straightforward)
   - Support both .ppt and .pptx file types. Currently only the latter is
