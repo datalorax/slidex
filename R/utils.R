@@ -106,10 +106,16 @@ import_rel_xml <- function(xml_folder) {
 extract_title <- function(sld) {
   classes <- xml_find_all(sld, "//p:sp/p:nvSpPr/p:cNvPr") %>%
     xml_attr("name")
+  if(!any(grepl("Title", classes))) {
+    classes <- xml_find_all(sld, "//p:sp/p:nvSpPr/p:nvPr/p:ph") %>%
+      xml_attr("type")
+  }
 
-  title <- xml_find_all(sld, "//p:sp/p:txBody")[grep("Title", classes)] %>%
+  title <- xml_find_all(sld, "//p:sp/p:txBody")[grep("[Tt]itle", classes)] %>%
     xml_text()
-  paste("# ", title, "\n")
+
+  out <- paste("# ", title, "\n")
+  out[!grepl("#   \n", out)]
 }
 
 # This function is only used within the extract_body function
