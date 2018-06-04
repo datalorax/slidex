@@ -20,12 +20,12 @@
 #' @importFrom xml2 read_xml xml_find_all xml_attr xml_text xml_children
 #' @importFrom purrr map map2 map_dbl map_chr map_df pmap map_lgl
 #' @importFrom magrittr %>%
-#' @importFrom dplyr mutate bind_cols select
+#' @importFrom dplyr mutate bind_cols select group_by ungroup
 #' @importFrom tibble tibble
 #' @importFrom tidyr unnest
 #' @importFrom rlang .data
 #' @importFrom utils unzip capture.output write.csv
-#' @importFrom stats setNames
+#' @importFrom stats setNames lag na.omit
 "_PACKAGE"
 
 if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
