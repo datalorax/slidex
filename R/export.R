@@ -10,7 +10,21 @@
 convert_pptx <- function(path, author, title = NULL, sub = NULL,
                          date = Sys.Date(), theme = "default",
                          highlightStyle = "github", force = FALSE) {
+  if(!file.exists(path)) {
+    stop(paste0("Cannot find file ", basename(path), " in directory",
+                "'", dirname(path), "'",
+                ". ", "Note - file paths must be specified with the '.pptx'",
+                "extension."))
+  }
   xml  <- extract_xml(path, force = force)
+  on.exit(unlink(xml, recursive = TRUE))
+
+  lang_return <- tryCatch(check_lang(xml), error = function(e) e)
+  if(!is.null(lang_return$message)) {
+    unlink("assets", recursive = TRUE)
+    stop(lang_return$message)
+  }
+
   slds <- import_slide_xml(xml)
   rels <- import_rel_xml(xml)
 
@@ -21,22 +35,23 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
 
   rmd <- paste0(gsub("_xml", "", xml), ".Rmd")
 
-  sink(rmd)
-    cat(
-      create_yaml(title_sld, author, title, sub, date, theme, highlightStyle)
-    )
-    pmap(list(.x = slds, .y = rels, .z = seq_along(slds)),
-        function(.x, .y, .z)
-        cat("\n---",
-            extract_title(.x),
-            extract_body(.x),
-            tribble_code(extract_table(.x), tbl_num = .z),
-            extract_attr(.y, "image", .x),
-            extract_attr(.y, "link", .x),
-            sep = "\n")
-      )
-  sink()
-  unlink("slidedemo_xml", recursive = TRUE)
+  sink_error <- tryCatch(
+    sink_rmd(rmd, slds, rels,
+             title_sld, author, title, sub, date, theme,
+             highlightStyle),
+    error = function(e) e
+  )
+
+  if(!is.null(sink_error$message)) {
+    unlink("assets", recursive = TRUE)
+    unlink(rmd, recursive = TRUE)
+    stop(sink_error$message)
+  }
+
+  if(length(list.files("assets")) == 0) {
+    unlink("assets", recursive = TRUE)
+  }
+
   system(paste("open", rmd))
 }
 
