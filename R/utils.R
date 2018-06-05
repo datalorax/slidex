@@ -1,3 +1,16 @@
+
+check_lang <- function(xml_folder) {
+  pres_xml <- read_xml(file.path(xml_folder, "ppt", "presentation.xml"))
+
+  lang <- xml_find_all(pres_xml, "//p:defaultTextStyle/a:defPPr/a:defRPr") %>%
+    map_chr(~xml_attr(., "lang"))
+
+  if(any(lang != "en-US")) {
+    stop(paste0("Non-English (US) languages detected. Currently, the only ",
+                "language encoding supported is 'en-US'."))
+  }
+}
+
 #' Extract xml from pptx
 #'
 #' @param path Path to the Microsoft PowerPoint file
@@ -6,9 +19,7 @@
 #'   \code{FALSE}.
 
 extract_xml <- function(path, force = FALSE) {
-  ppt_splt <- strsplit(path, "/")
-  ppt <- map_chr(ppt_splt, ~.[length(.)])
-
+  ppt <- basename(path)
   xml_folder <- paste0(gsub("\\.pptx| ", "", ppt), "_xml")
 
   if(file.exists(xml_folder)) {
@@ -427,4 +438,24 @@ create_yaml <- function(title_sld, author, title = NULL, sub = NULL,
   elements <- elements[!map_lgl(elements, is.null)]
 
   paste0(elements, collapse = "\n")
+}
+
+sink_rmd <- function(rmd, slds, rels,
+                     title_sld, author, title, sub, date, theme,
+                     highlightStyle) {
+  sink(rmd)
+    cat(
+      create_yaml(title_sld, author, title, sub, date, theme, highlightStyle)
+    )
+    pmap(list(.x = slds, .y = rels, .z = seq_along(slds)),
+        function(.x, .y, .z)
+        cat("\n---",
+            extract_title(.x),
+            extract_body(.x),
+            tribble_code(extract_table(.x), tbl_num = .z),
+            extract_attr(.y, "image", .x),
+            extract_attr(.y, "link", .x),
+            sep = "\n")
+      )
+  sink()
 }
