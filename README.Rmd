@@ -33,7 +33,7 @@ devtools::install_github("datalorax/slidex")
 ```
 
 ## Basic usage
-At present, the package exports a single function, `convert_pptx`, which takes two required argument: the `path` to the PPTX file (passed as a string), and the `author` (also passed as a sting). For example:
+At present, the package exports a single function, `convert_pptx`, which takes two required arguments: the `path` to the PPTX file (passed as a string), and the `author` (also passed as a string). For example:
 
 ```{r example1, eval = FALSE}
 library(slidex)
