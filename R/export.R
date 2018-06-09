@@ -10,14 +10,17 @@
 convert_pptx <- function(path, author, title = NULL, sub = NULL,
                          date = Sys.Date(), theme = "default",
                          highlightStyle = "github", force = FALSE) {
+
+  xml <- paste0(gsub("\\.pptx", "", basename(path)), "_xml")
+  on.exit(unlink(xml, recursive = TRUE), add = TRUE)
+
   if(!file.exists(path)) {
     stop(paste0("Cannot find file ", basename(path), " in directory",
                 "'", dirname(path), "'",
                 ". ", "Note - file paths must be specified with the '.pptx'",
                 "extension."))
   }
-  xml  <- extract_xml(path, force = force)
-  on.exit(unlink(xml, recursive = TRUE))
+  extract_xml(path, force = force)
 
   lang_return <- tryCatch(check_lang(xml), error = function(e) e)
   if(!is.null(lang_return$message)) {
