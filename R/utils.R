@@ -272,21 +272,23 @@ extract_attr <- function(rel, attr, sld) {
   #
   #   data <- map(chart_xml, ~xml_find_all(., "//cx:data"))
   #
-  #   x_data <- map(data, ~map(., ~xml_find_all(., "./cx:strDim/cx:lvl/cx:pt"))) %>%
+  #   x_data <- map(data, ~map(.,
+  #                          ~xml_find_all(., "./cx:strDim/cx:lvl/cx:pt"))) %>%
   #     map(~map(., xml_text)) %>%
   #     unlist(x_data, recursive = FALSE) %>%
   #     setNames(paste0("V", seq_along(.))) %>%
   #     as.data.frame() %>%
   #     gather(id, x)
   #
-  #   y_data <- map(data, ~map(., ~xml_find_all(., "./cx:numDim/cx:lvl/cx:pt"))) %>%
-  #     map(~map(., xml_text)) %>%
-  #     unlist(recursive = FALSE) %>%
-  #     setNames(paste0("V", seq_along(.))) %>%
-  #     as.data.frame() %>%
-  #     gather(id, y)
+  #   y_data <- map(data, ~map(.,
+  #                          ~xml_find_all(., "./cx:numDim/cx:lvl/cx:pt"))) %>%
+  #      map(~map(., xml_text)) %>%
+  #      unlist(recursive = FALSE) %>%
+  #      setNames(paste0("V", seq_along(.))) %>%
+  #      as.data.frame() %>%
+  #      gather(id, y)
   #
-  #   full_join(x_data, y_data)
+  #      full_join(x_data, y_data)
   #
   # }
   if(attr == "link") {
@@ -296,7 +298,8 @@ extract_attr <- function(rel, attr, sld) {
       map_lgl(~length(.) > 0 )
 
     links <- target[grep("hyperlink", types)]
-    out <- paste0("[", xml_text(ar)[select], "]", "(", links, ")", collapse = "\n")
+    out <- paste0("[", xml_text(ar)[select], "]", "(", links, ")",
+                  collapse = "\n")
   }
   if(attr == "image") {
     imgs <- target[grep("image", types)]
