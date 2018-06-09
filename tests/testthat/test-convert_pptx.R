@@ -6,9 +6,7 @@ test_that("Basic files are where they're supposed to be", {
   expect_equal(file.exists("slidedemo.Rmd"), TRUE)
   expect_equal(dir.exists("assets"), TRUE)
   expect_equal(dir.exists("slidedemo_xml"), FALSE)
-})
 
-test_that("Error is thrown when assets file exists already", {
   expect_error(convert_pptx(pptx, "Daniel"))
   expect_equal(dir.exists("slidedemo_xml"), FALSE)
 })
