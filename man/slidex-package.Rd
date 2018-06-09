@@ -40,6 +40,14 @@ This package is designed to extract information from Microsoft
  cells were used in the original table. Nested bulleted lists should also be
  maintained.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/datalorax/slidex}
+  \item Report bugs at \url{https://github.com/datalorax/slidex/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Daniel Anderson \email{daniela@uoregon.edu}
 

@@ -33,4 +33,10 @@ Imports:
     rlang
 RoxygenNote: 6.0.1
 Suggests: 
-    covr
+    covr,
+    testthat,
+    knitr,
+    kableExtra,
+    xaringan
+URL: https://github.com/datalorax/slidex
+BugReports: https://github.com/datalorax/slidex/issues
