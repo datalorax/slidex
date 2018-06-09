@@ -52,7 +52,7 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
     unlink("assets", recursive = TRUE)
   }
 
-  system(paste("open", rmd))
+  system(paste(Sys.getenv("R_BROWSER"), rmd))
 }
 
 
