@@ -12,11 +12,8 @@ test_that("Basic files are where they're supposed to be", {
   expect_equal(dir.exists("slidedemo_xml"), FALSE)
 })
 
-path <- system.file("examples", "slidedemo.pptx", package = "slidex")
-rmd <- gsub("\\.pptx", "\\.rmd", basename(path))
-
 unlink("assets", recursive = TRUE, force = TRUE)
-unlink(rmd, recursive = TRUE, force = TRUE)
+unlink("slidedemo.Rmd", recursive = TRUE, force = TRUE)
 
 test_that("Error is thrown when file is not pptx", {
   path <- system.file("examples", "slidedemo.pptx", package = "slidex")
