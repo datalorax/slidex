@@ -54,12 +54,13 @@ Although not a dependency, the package functionally requires the [xaringan](http
 * Maintain bolding and italicizing (no support for underlining yet)
 * Maintain pictures
 * Maintain links (slighlty imperfect currently)
+* Pulls notes from the slides. By default the notes are embedded in the slides
+and a separate .txt file is written out.
 
 ## Things the package does not yet do, but hopefully will
-* Pull notes from slides (this is pretty straightforward, just still needs to be implemented)
 * Pull data and potentially reproduce plots (some support for this already, look in "assets/data" if you have a chart and want the data from it)
 * Convert `emf` file types to `png`s. This is a Microsoft proprietary format and will require users have LibreOffice installed.
-* Maintain two-panel layouts (also should be relatively straightforward)
+* Maintain two-panel layouts
 * Support both .ppt and .pptx file types. Currently only the latter is supported. Will require LibreOffice.
 
 ## Other ideas?
