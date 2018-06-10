@@ -39,7 +39,7 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
   rmd <- paste0(gsub("_xml", "", xml), ".Rmd")
 
   sink_error <- tryCatch(
-    sink_rmd(rmd, slds, rels,
+    sink_rmd(xml, rmd, slds, rels,
              title_sld, author, title, sub, date, theme,
              highlightStyle),
     error = function(e) e
