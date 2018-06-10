@@ -5,11 +5,15 @@
 #'   (e.g., from a previous conversion) should it be overwritten? Defaults to
 #'   \code{FALSE}.
 #' @inheritParams create_yaml
+#' @param writenotes Logical. If notes are in the original PPTX, should they be
+#'   written out as their own .txt file in addition to being embedded in the
+#'   slides? Defaults to \code{TRUE}.
 #' @export
 #'
 convert_pptx <- function(path, author, title = NULL, sub = NULL,
                          date = Sys.Date(), theme = "default",
-                         highlightStyle = "github", force = FALSE) {
+                         highlightStyle = "github", force = FALSE,
+                         writenotes = TRUE) {
 
   xml <- paste0(gsub("\\.pptx", "", basename(path)), "_xml")
   on.exit(unlink(xml, recursive = TRUE), add = TRUE)
@@ -55,6 +59,9 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
     unlink("assets", recursive = TRUE)
   }
 
+  if(writenotes) {
+    write_notes(xml)
+  }
   system(paste(Sys.getenv("R_BROWSER"), rmd))
 }
 

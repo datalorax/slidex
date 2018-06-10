@@ -5,7 +5,8 @@
 \title{Extract xml from pptx}
 \usage{
 convert_pptx(path, author, title = NULL, sub = NULL, date = Sys.Date(),
-  theme = "default", highlightStyle = "github", force = FALSE)
+  theme = "default", highlightStyle = "github", force = FALSE,
+  writenotes = TRUE)
 }
 \arguments{
 \item{path}{Path to the Microsoft PowerPoint file}
@@ -33,6 +34,10 @@ manipulated after conversion if you want other fonts with a specific theme.}
 \item{force}{If an 'assets' folder already exists in the current directory,
 (e.g., from a previous conversion) should it be overwritten? Defaults to
 \code{FALSE}.}
+
+\item{writenotes}{Logical. If notes are in the original PPTX, should they be
+written out as their own .txt file in addition to being embedded in the
+slides? Defaults to \code{TRUE}.}
 }
 \description{
 Extract xml from pptx

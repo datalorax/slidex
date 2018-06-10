@@ -386,7 +386,7 @@ import_notes_xml <- function(xml_folder) {
 
 #' @param notes A list of the xml code with all the notes for all slides
 #' @param sld_num The specific slide number to pull the notes from
-extract_notes <- function(notes, sld_num) {
+extract_notes <- function(notes, sld_num, inslides = TRUE) {
 
   sld_notes_num <- map_dbl(notes,
                        ~xml_find_all(., "//p:txBody/a:p/a:fld/a:t") %>%
@@ -401,9 +401,33 @@ extract_notes <- function(notes, sld_num) {
     xml_text(trim = TRUE) %>%
     paste0(collapse = " ")
 
-  paste0("\n???\n", note_text, "\n", collapse = "")
+  if(inslides) {
+    return(paste0("\n???\n", note_text, "\n", collapse = ""))
+  }
+  if(!inslides) {
+    return(paste0(note_text, "\n", collapse = ""))
+  }
 }
 
+write_notes <- function(xml_folder) {
+  notes <- import_notes_xml(xml_folder)
+  n_slides <- length(
+                     list.files(file.path(xml_folder, "ppt", "slides"),
+                                "\\.xml")
+                     )
+
+  sink(gsub("_xml", "-notes.txt", xml_folder))
+    map(seq_len(n_slides),
+        ~paste0("\n",
+                "---",
+                "#", .,
+                "\n",
+                extract_notes(notes, ., inslides = FALSE),
+                collapse = "\n")) %>%
+      paste0(collapse = "\n") %>%
+      cat()
+  sink()
+}
 
 #' Create the \href{https://github.com/yihui/xaringan}{xaringan} YAML Front
 #' Matter
@@ -473,11 +497,11 @@ create_yaml <- function(title_sld, author, title = NULL, sub = NULL,
   paste0(elements, collapse = "\n")
 }
 
-sink_rmd <- function(xml, rmd, slds, rels,
+sink_rmd <- function(xml_folder, rmd, slds, rels,
                      title_sld, author, title, sub, date, theme,
                      highlightStyle) {
 
-  sld_notes <- import_notes_xml(xml)
+  sld_notes <- import_notes_xml(xml_folder)
 
   sink(rmd)
     cat(
