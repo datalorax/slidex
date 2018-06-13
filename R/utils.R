@@ -109,24 +109,43 @@ import_rel_xml <- function(xml_folder) {
   rels[order]
 }
 
+extract_class <- function(sld) {
+  xml_find_all(sld, "//p:sp/p:nvSpPr/p:nvPr/p:ph") %>%
+    map_chr(~xml_attr(., "type"))
+}
 
 #' Extract Slide Title
 #'
 #' @param sld xml code for the slide to extract the title from
 #'
 extract_title <- function(sld) {
-  classes <- xml_find_all(sld, "//p:sp/p:nvSpPr/p:cNvPr") %>%
-    xml_attr("name")
-  if(!any(grepl("Title", classes))) {
-    classes <- xml_find_all(sld, "//p:sp/p:nvSpPr/p:nvPr/p:ph") %>%
-      xml_attr("type")
-  }
+  classes <- extract_class(sld)
 
-  title <- xml_find_all(sld, "//p:sp/p:txBody")[grep("[Tt]itle", classes)] %>%
+  title <- xml_find_all(sld, "//p:sp/p:txBody")[grep("[tT]itle", classes)] %>%
     xml_text()
+  if(length(grep("subTitle", classes)) != 0) {
+    title <- title[-grep("subTitle", classes)]
+  }
 
   out <- paste("# ", title, "\n")
   out[!grepl("#   \n", out)]
+}
+
+extract_subtitle <- function(sld) {
+  classes <- extract_class(sld)
+  if(length(grep("subTitle", classes)) == 0) {
+    return()
+  }
+
+  out <- xml_find_all(sld, "//p:sp/p:txBody")[grep("subTitle", classes)] %>%
+    xml_find_all("./a:p") %>%
+    map_chr(xml_text) %>%
+    paste0(collapse = " ") %>%
+    paste0("'", ., "'")
+  if(out == "''") {
+    return()
+  }
+  out
 }
 
 # This function is only used within the extract_body function
@@ -138,6 +157,7 @@ max_amount <- function(x) {
   max(x) - 1
 }
 
+
 #' Extract the body of the slide
 #'
 #' @param sld xml code for the slide to extract the title from
@@ -146,10 +166,9 @@ extract_body <- function(sld) {
 
   sps <- xml_find_all(sld, "//p:sp")
   aps <- map(sps, ~xml_find_all(., "./p:txBody/a:p"))
-  classes <- xml_find_all(sld, "//p:sp/p:nvSpPr/p:cNvPr") %>%
-    xml_attr("name")
+  classes <- extract_class(sld)
 
-  aps <- aps[-grep("Title|Slide Number", classes)]
+  aps <- aps[-grep("title|ftr", classes)]
 
   if(length(aps) == 0) {
     return()
@@ -240,6 +259,16 @@ extract_body <- function(sld) {
   paste0(text$text, collapse = "\n")
 }
 
+extract_footnote <- function(sld) {
+  classes <- extract_class(sld)
+  if(!any(grepl("ftr", classes))) {
+    return()
+  }
+  xml_find_all(sld, "//p:sp")[[grep("ftr", classes)]] %>%
+    xml_text() %>%
+    paste0("\n\n.footnote[", ., "]")
+}
+
 # from command line
 # libreoffice --headless --convert-to png image.emf
 
@@ -301,10 +330,19 @@ extract_attr <- function(rel, attr, sld) {
     out <- paste0("[", xml_text(ar)[select], "]", "(", links, ")",
                   collapse = "\n")
   }
-  if(attr == "image") {
-    imgs <- target[grep("image", types)]
-    splt <- map(imgs, strsplit, "/")
-    imgs <- map_chr(splt, ~map_chr(., ~.[[length(.)]]))
+  out
+}
+
+extract_image <- function(sld, rel) {
+  sld_ids <- xml_find_all(sld, "//p:pic/p:blipFill/a:blip") %>%
+    xml_attr(., "embed")
+  if(length(sld_ids) == 0) {
+    return()
+  }
+  rel_ids <- map_chr(xml_children(rel), ~xml_attr(., "Id"))
+  imgs <- map(xml_children(rel), ~xml_attr(., "Target")) %>%
+    .[rel_ids %in% sld_ids] %>%
+    map_chr(basename)
 
     out <- paste0("![](assets/img/", imgs, ")")
     if(length(out) == 2) {
@@ -316,7 +354,6 @@ extract_attr <- function(rel, attr, sld) {
                     imgs, "')\nbackground-size: cover\n",
                     collapse = "\n")
     }
-  }
   out
 }
 
@@ -384,8 +421,13 @@ import_notes_xml <- function(xml_folder) {
   map(list.files(notes_folder, "\\.xml", full.names = TRUE), read_xml)
 }
 
+#' Function to pull notes from a slide
+#'
 #' @param notes A list of the xml code with all the notes for all slides
 #' @param sld_num The specific slide number to pull the notes from
+#' @param inslides Logical. Should the notes be embedded in the slides?
+#'   Defaults to \code{TRUE}.
+#'
 extract_notes <- function(notes, sld_num, inslides = TRUE) {
 
   sld_notes_num <- map_dbl(notes,
@@ -402,7 +444,8 @@ extract_notes <- function(notes, sld_num, inslides = TRUE) {
     paste0(collapse = " ")
 
   if(inslides) {
-    return(paste0("\n???\n", note_text, "\n", collapse = ""))
+    out <- paste0("\n???\n", note_text, "\n", collapse = "")
+    return(out[-grep(paste0("\n???\n", " ", "\n", collapse = ""), out)])
   }
   if(!inslides) {
     return(paste0(note_text, "\n", collapse = ""))
@@ -456,6 +499,9 @@ create_yaml <- function(title_sld, author, title = NULL, sub = NULL,
     ttl  <- paste0("title: '",
                    gsub("\t|\n", "", substr(ttl, 3, nchar(ttl))),
                    "'")
+  }
+  if(is.null(sub)) {
+    sub <- extract_subtitle(title_sld)
   }
   if(!is.null(title)) ttl <- paste0("title: '", title, "'")
   if(!is.null(sub)) sub  <- paste0("subtitle: ", sub)
@@ -513,8 +559,9 @@ sink_rmd <- function(xml_folder, rmd, slds, rels,
             extract_title(.x),
             extract_body(.x),
             tribble_code(extract_table(.x), tbl_num = .z),
-            extract_attr(.y, "image", .x),
+            extract_image(.x, .y),
             extract_attr(.y, "link", .x),
+            extract_footnote(.x),
             extract_notes(sld_notes, .z + 1),
             sep = "\n")
       )
