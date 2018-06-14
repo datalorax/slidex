@@ -15,7 +15,7 @@ status](https://www.r-pkg.org/badges/version/slidex)](https://cran.r-project.org
 This package is a work-in-progress, but is aimed at making the process
 of converting Microsoft PowerPoint slides to beautiful HTML
 [xaringan](https://github.com/yihui/xaringan) slides as seamless as
-possible, maintaining tables,figures, links, and bulleted lists.
+possible, maintaining tables, figures, links, and bulleted lists.
 
 ## Installation
 
@@ -50,14 +50,15 @@ or a new
 
 Although not a dependency, the package functionally requires the
 [xaringan](https://github.com/yihui/xaringan) package, and works best if
-both the [knitr](https://github.com/yihui/knitr) and
-[kableExtra](https://github.com/haozhu233/kableExtra) packages are
-installed. Without the latter two, tables will not be produced, although
-the code to create a dataframe from the tables will still be embedded.
-Install suggested packages from CRAN with
+the [knitr](https://github.com/yihui/knitr),
+[kableExtra](https://github.com/haozhu233/kableExtra), and
+[tibble](https://github.com/tidyverse/tibble) packages are installed.
+Without the latter three, tables will not be produced, although the code
+to create a dataframe from the tables will still be embedded. Install
+suggested packages from CRAN with
 
 ``` r
-install.packages(c("xaringan", "knitr", "kableExtra"))
+install.packages(c("xaringan", "knitr", "kableExtra", "tibble"))
 ```
 
 ## Things the package **should** be able to do
@@ -65,8 +66,8 @@ install.packages(c("xaringan", "knitr", "kableExtra"))
   - Maintain bulleting levels
   - Maintain bolding and italicizing (no support for underlining yet)
   - Maintain pictures
-  - Maintain links (slighlty imperfect currently)
-  - Pulls notes from the slides. By default the notes are embedded in
+  - Maintain links (slightly imperfect currently)
+  - Extract notes from the slides. By default the notes are embedded in
     the slides and a separate .txt file is written out.
 
 ## Things the package does not yet do, but hopefully will
