@@ -35,3 +35,4 @@ manipulated after conversion if you want other fonts with a specific theme.}
 Create the \href{https://github.com/yihui/xaringan}{xaringan} YAML Front
 Matter
 }
+\keyword{internal}

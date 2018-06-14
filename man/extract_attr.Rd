@@ -17,3 +17,4 @@ extract_attr(rel, attr, sld)
 \description{
 Extract Attributes from the corresponding slide
 }
+\keyword{internal}

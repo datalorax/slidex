@@ -16,3 +16,4 @@ extract_xml(path, force = FALSE)
 \description{
 Extract xml from pptx
 }
+\keyword{internal}

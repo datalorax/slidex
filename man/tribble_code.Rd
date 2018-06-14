@@ -17,3 +17,4 @@ to the slide number.}
 \description{
 Wrap a DF in \code{tibble::tribble} Code
 }
+\keyword{internal}

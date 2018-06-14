@@ -18,6 +18,7 @@ check_lang <- function(xml_folder) {
 #' @param force If an 'assets' folder already exists in the current directory,
 #'   (e.g., from a previous conversion) should it be overwritten? Defaults to
 #'   \code{FALSE}.
+#' @keywords internal
 
 extract_xml <- function(path, force = FALSE) {
   ppt <- basename(path)
@@ -61,6 +62,7 @@ extract_xml <- function(path, force = FALSE) {
 #'
 #' @param xml_folder The folder containing all of the xml code from the pptx,
 #' created from \code{\link{extract_xml}}.
+#' @keywords internal
 
 import_slide_xml <- function(xml_folder) {
   slds <- file.path(xml_folder, "ppt", "slides") %>%
@@ -84,6 +86,7 @@ import_slide_xml <- function(xml_folder) {
 #'
 #' @param xml_folder The folder containing all of the xml code from the pptx,
 #' created from \code{\link{extract_xml}}.
+#' @keywords internal
 
 import_rel_xml <- function(xml_folder) {
   rels <- file.path(xml_folder, "ppt", "slides", "_rels") %>%
@@ -112,6 +115,8 @@ extract_class <- function(sld) {
 #'
 #' @param sld xml code for the slide to extract the title from
 #'
+#' @keywords internal
+
 extract_title <- function(sld) {
   classes <- extract_class(sld)
 
@@ -155,6 +160,8 @@ max_amount <- function(x) {
 #'
 #' @param sld xml code for the slide to extract the title from
 #'
+#' @keywords internal
+
 extract_body <- function(sld) {
 
   sps <- xml_find_all(sld, "//p:sp")
@@ -271,6 +278,7 @@ extract_footnote <- function(sld) {
 #' @param attr Attribute to extract. Currently takes two valide arguments:
 #'   \code{"image"} or \code{"link"} to extract images or links, respectively.
 #' @param sld xml code for the slide to extract the title from
+#' @keywords internal
 
 # xml_folder will need to be another argument if the commented code below is
 # incorporated
@@ -356,6 +364,7 @@ extract_image <- function(sld, rel) {
 #' @return a \code{data.frame} with the data from the table. Generally fed to
 #'   \code{\link{tribble_code}}.
 #'
+#' @keywords internal
 
 extract_table <- function(sld) {
   rows  <- xml_find_all(sld, "//a:tr")
@@ -383,7 +392,7 @@ extract_table <- function(sld) {
 #' @param tbl_num The table number. Not produced in the caption, but used
 #'   to name the object and the code chunk. In typical application, corresponds
 #'   to the slide number.
-
+#' @keywords internal
 
 tribble_code <- function(df, tbl_num = "") {
 
@@ -421,6 +430,8 @@ import_notes_xml <- function(xml_folder) {
 #' @param inslides Logical. Should the notes be embedded in the slides?
 #'   Defaults to \code{TRUE}.
 #'
+#' @keywords internal
+
 extract_notes <- function(notes, sld_num, inslides = TRUE) {
 
   sld_notes_num <- map_dbl(notes,
@@ -485,6 +496,7 @@ write_notes <- function(xml_folder) {
 #' manipulated after conversion if you want other fonts with a specific theme.
 #' @param highlightStyle The code highlighting style. Defaults to
 #'   \code{"github"} flavored highlighting
+#' @keywords internal
 
 create_yaml <- function(title_sld, author, title = NULL, sub = NULL,
                         date = Sys.Date(), theme = "default",
