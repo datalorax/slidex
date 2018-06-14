@@ -2,19 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{extract_attr}
 \alias{extract_attr}
-\title{Extract Attributes from the corresponding slide}
+\title{Extract attributes from the corresponding slide}
 \usage{
 extract_attr(rel, attr, sld)
 }
 \arguments{
 \item{rel}{xml \code{rel} code for the slide}
 
-\item{attr}{Attribute to extract. Currently takes two valide arguments:
+\item{attr}{Attribute to extract. Currently takes two valid arguments:
 \code{"image"} or \code{"link"} to extract images or links, respectively.}
 
-\item{sld}{xml code for the slide to extract the title from}
+\item{sld}{xml code for the slide to extract the attribute from}
 }
 \description{
-Extract Attributes from the corresponding slide
+Extract attributes from the corresponding slide
 }
 \keyword{internal}

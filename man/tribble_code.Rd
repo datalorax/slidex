@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{tribble_code}
 \alias{tribble_code}
-\title{Wrap a DF in \code{tibble::tribble} Code}
+\title{Wrap a DF in \code{tibble::tribble} code}
 \usage{
 tribble_code(df, tbl_num = "")
 }
@@ -15,6 +15,6 @@ to name the object and the code chunk. In typical application, corresponds
 to the slide number.}
 }
 \description{
-Wrap a DF in \code{tibble::tribble} Code
+Wrap a DF in \code{tibble::tribble} code
 }
 \keyword{internal}

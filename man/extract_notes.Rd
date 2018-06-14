@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{extract_notes}
 \alias{extract_notes}
-\title{Function to pull notes from a slide}
+\title{Function to extract notes from a slide}
 \usage{
 extract_notes(notes, sld_num, inslides = TRUE)
 }
@@ -15,6 +15,6 @@ extract_notes(notes, sld_num, inslides = TRUE)
 Defaults to \code{TRUE}.}
 }
 \description{
-Function to pull notes from a slide
+Function to extract notes from a slide
 }
 \keyword{internal}

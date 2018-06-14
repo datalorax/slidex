@@ -2,16 +2,16 @@
 % Please edit documentation in R/utils.R
 \name{create_yaml}
 \alias{create_yaml}
-\title{Create the \href{https://github.com/yihui/xaringan}{xaringan} YAML Front
-Matter}
+\title{Create the \href{https://github.com/yihui/xaringan}{xaringan} YAML front
+matter}
 \usage{
 create_yaml(title_sld, author, title = NULL, sub = NULL,
   date = Sys.Date(), theme = "default", highlightStyle = "github")
 }
 \arguments{
-\item{title_sld}{The xml code for the title slide in the PPTX.}
+\item{title_sld}{The xml code for the title slide in the pptx.}
 
-\item{author}{A string indicating th author or authors of the slide deck.
+\item{author}{A string indicating the author or authors of the slide deck.
 Multiple authors can be provided with a string vector.}
 
 \item{title}{Optional title of the slide deck. Defaults to the title of the
@@ -32,7 +32,7 @@ manipulated after conversion if you want other fonts with a specific theme.}
 \code{"github"} flavored highlighting}
 }
 \description{
-Create the \href{https://github.com/yihui/xaringan}{xaringan} YAML Front
-Matter
+Create the \href{https://github.com/yihui/xaringan}{xaringan} YAML front
+matter
 }
 \keyword{internal}

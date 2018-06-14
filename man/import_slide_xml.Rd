@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{import_slide_xml}
 \alias{import_slide_xml}
-\title{Import xml Code for PPTX Slides}
+\title{Import xml code for pptx slides}
 \usage{
 import_slide_xml(xml_folder)
 }
@@ -11,6 +11,6 @@ import_slide_xml(xml_folder)
 created from \code{\link{extract_xml}}.}
 }
 \description{
-Import xml Code for PPTX Slides
+Import xml code for pptx slides
 }
 \keyword{internal}

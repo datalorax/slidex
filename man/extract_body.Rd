@@ -7,7 +7,7 @@
 extract_body(sld)
 }
 \arguments{
-\item{sld}{xml code for the slide to extract the title from}
+\item{sld}{xml code for the slide to extract the body from}
 }
 \description{
 Extract the body of the slide
