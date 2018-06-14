@@ -38,7 +38,10 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
         "existing folder and all the files within it."
         )
       )
-    }
+  }
+  if(file.exists(file.path(out_dir, folder)) & force == TRUE) {
+    unlink(file.path(out_dir, folder, recursive = TRUE, force = TRUE))
+  }
 
   lang_return <- tryCatch(check_lang(xml), error = function(e) e)
   if(!is.null(lang_return$message)) {
