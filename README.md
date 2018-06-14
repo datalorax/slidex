@@ -54,6 +54,11 @@ both the [knitr](https://github.com/yihui/knitr) and
 [kableExtra](https://github.com/haozhu233/kableExtra) packages are
 installed. Without the latter two, tables will not be produced, although
 the code to create a dataframe from the tables will still be embedded.
+Install suggested packages from CRAN with
+
+``` r
+install.packages(c("xaringan", "knitr", "kableExtra"))
+```
 
 ## Things the package **should** be able to do
 
