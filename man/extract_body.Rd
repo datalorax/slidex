@@ -12,3 +12,4 @@ extract_body(sld)
 \description{
 Extract the body of the slide
 }
+\keyword{internal}

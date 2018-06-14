@@ -13,3 +13,4 @@ created from \code{\link{extract_xml}}.}
 \description{
 Import xml \code{rel} Code from PPTX
 }
+\keyword{internal}

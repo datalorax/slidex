@@ -16,3 +16,4 @@ a \code{data.frame} with the data from the table. Generally fed to
 \description{
 Extract tables from slides
 }
+\keyword{internal}

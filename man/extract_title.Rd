@@ -12,3 +12,4 @@ extract_title(sld)
 \description{
 Extract Slide Title
 }
+\keyword{internal}

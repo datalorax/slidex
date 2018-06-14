@@ -13,3 +13,4 @@ created from \code{\link{extract_xml}}.}
 \description{
 Import xml Code for PPTX Slides
 }
+\keyword{internal}
