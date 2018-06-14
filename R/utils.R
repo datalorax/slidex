@@ -23,6 +23,9 @@ extract_xml <- function(path, force = FALSE) {
   ppt <- basename(path)
   folder <- gsub("\\.pptx", "", ppt)
   tmpdir <- tempdir()
+  if(dir.exists(tmpdir)) {
+    unlink(tmpdir, recursive = TRUE, force = TRUE)
+  }
   dir.create(tmpdir, showWarnings = FALSE)
   basepath <- file.path(tmpdir, folder)
 
