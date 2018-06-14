@@ -6,6 +6,7 @@ check_lang <- function(xml_folder) {
     map_chr(~xml_attr(., "lang"))
 
   if(any(lang != "en-US")) {
+    unlink(dirname(xml_folder), recursive = TRUE, force = TRUE)
     stop(paste0("Non-English (US) languages detected. Currently, the only ",
                 "language encoding supported is 'en-US'."))
   }
@@ -20,47 +21,45 @@ check_lang <- function(xml_folder) {
 
 extract_xml <- function(path, force = FALSE) {
   ppt <- basename(path)
-  xml_folder <- paste0(gsub("\\.pptx| ", "", ppt), "_xml")
+  folder <- gsub("\\.pptx", "", ppt)
 
-  if(file.exists(xml_folder)) {
-    unlink(xml_folder, recursive = TRUE)
-  }
-  dir.create(xml_folder, showWarnings = FALSE)
-
-  if(file.exists("assets") & force == FALSE) {
-    stop(paste0("This function will create an assets folder in this ",
-                "directory, but a folder named 'assets' already exists here. ",
-                "Please move/delete the assets folder, or rerun with ",
-                "`force = TRUE` to force the function to overwrite the ",
+  if(file.exists(folder) & force == FALSE) {
+    stop(paste0("This function will create a new folder in this ",
+                "directory with the folder of the PPTX, but a folder with this ",
+                "folder already exists here. Please move/delete the folder, ",
+                "specify a new output directory with `out = 'path'`, or rerun ",
+                "with `force = TRUE` to force the function to overwrite the ",
                 "existing folder and all the files within it."))
   }
-  if(file.exists("assets") & force == TRUE) {
-    unlink("assets", recursive = TRUE)
+  if(file.exists(folder) & force == TRUE) {
+    unlink(folder, recursive = TRUE, force = TRUE)
   }
-  dir.create("assets", showWarnings = FALSE)
+  dir.create(folder, showWarnings = FALSE)
+  dir.create(file.path(folder, "xml"), showWarnings = FALSE)
 
-  file.copy(path, file.path(xml_folder, ppt))
-  file.rename(file.path(xml_folder, ppt),
-              gsub("\\.pptx", "\\.zip", file.path(xml_folder, ppt)))
+  file.copy(path, file.path(folder, "xml", ppt))
+  file.rename(file.path(folder, "xml", ppt),
+              gsub("\\.pptx", "\\.zip", file.path(folder, "xml", ppt)))
 
-  unzip(gsub("\\.pptx", "\\.zip", file.path(xml_folder, ppt)),
-        exdir = xml_folder)
+  unzip(gsub("\\.pptx", "\\.zip", file.path(folder, "xml", ppt)),
+        exdir = file.path(folder, "xml"))
 
-  if(file.exists(file.path(xml_folder, "ppt", "media"))) {
-    dir.create(file.path("assets", "img"), showWarnings = FALSE)
-    file.rename(file.path(xml_folder, "ppt", "media"),
-                file.path("assets", "img"))
+  if(file.exists(file.path(folder, "xml", "ppt", "media"))) {
+    dir.create(file.path(folder, "assets"), showWarnings = FALSE)
+    dir.create(file.path(folder, "assets", "img"), showWarnings = FALSE)
+    file.rename(file.path(folder, "xml", "ppt", "media"),
+                file.path(folder, "assets", "img"))
   }
-  if(file.exists(file.path(xml_folder, "ppt", "embeddings"))) {
-    dir.create(file.path("assets", "data"), showWarnings = FALSE)
-    file.rename(file.path(xml_folder, "ppt", "embeddings"),
-                file.path("assets", "data"))
+  if(file.exists(file.path(folder, "xml", "ppt", "embeddings"))) {
+    dir.create(file.path(folder, "assets", "data"), showWarnings = FALSE)
+    file.rename(file.path(folder, "xml", "ppt", "embeddings"),
+                file.path(folder, "assets", "data"))
   }
-  rels <- list.files(file.path(xml_folder, "ppt", "slides", "_rels"),
+  rels <- list.files(file.path(folder, "xml", "ppt", "slides", "_rels"),
                      full.names = TRUE)
 
   invisible(file.rename(rels, substr(rels, 1, nchar(rels) - 5)))
-  invisible(xml_folder)
+  invisible(file.path(folder, "xml"))
 }
 
 #' Import xml Code for PPTX Slides
@@ -156,7 +155,6 @@ max_amount <- function(x) {
   }
   max(x) - 1
 }
-
 
 #' Extract the body of the slide
 #'
@@ -458,8 +456,10 @@ write_notes <- function(xml_folder) {
                      list.files(file.path(xml_folder, "ppt", "slides"),
                                 "\\.xml")
                      )
-
-  sink(gsub("_xml", "-notes.txt", xml_folder))
+  folder <- map_chr(strsplit(dirname(xml_folder), "/"), ~.[[length(.)]])
+  notes_out <- file.path(dirname(xml_folder),
+                         paste0(folder, "-notes.txt"))
+  sink(notes_out)
     map(seq_len(n_slides),
         ~paste0("\n",
                 "---",

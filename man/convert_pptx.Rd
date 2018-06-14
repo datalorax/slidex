@@ -6,7 +6,7 @@
 \usage{
 convert_pptx(path, author, title = NULL, sub = NULL, date = Sys.Date(),
   theme = "default", highlightStyle = "github", force = FALSE,
-  writenotes = TRUE)
+  writenotes = TRUE, out_dir = NULL)
 }
 \arguments{
 \item{path}{Path to the Microsoft PowerPoint file}
@@ -38,6 +38,9 @@ manipulated after conversion if you want other fonts with a specific theme.}
 \item{writenotes}{Logical. If notes are in the original PPTX, should they be
 written out as their own .txt file in addition to being embedded in the
 slides? Defaults to \code{TRUE}.}
+
+\item{out_dir}{Optional output directory for the folder containing the RMD
+and corresponding assets. Defaults to the current working directory.}
 }
 \description{
 Extract xml from pptx
