@@ -22,44 +22,36 @@ check_lang <- function(xml_folder) {
 extract_xml <- function(path, force = FALSE) {
   ppt <- basename(path)
   folder <- gsub("\\.pptx", "", ppt)
+  tmpdir <- tempdir()
+  dir.create(tmpdir, showWarnings = FALSE)
+  basepath <- file.path(tmpdir, folder)
 
-  if(file.exists(folder) & force == FALSE) {
-    stop(paste0("This function will create a new folder in this ",
-                "directory with the folder of the PPTX, but a folder with this ",
-                "folder already exists here. Please move/delete the folder, ",
-                "specify a new output directory with `out = 'path'`, or rerun ",
-                "with `force = TRUE` to force the function to overwrite the ",
-                "existing folder and all the files within it."))
-  }
-  if(file.exists(folder) & force == TRUE) {
-    unlink(folder, recursive = TRUE, force = TRUE)
-  }
-  dir.create(folder, showWarnings = FALSE)
-  dir.create(file.path(folder, "xml"), showWarnings = FALSE)
+  dir.create(basepath, showWarnings = FALSE)
+  dir.create(file.path(basepath, "xml"), showWarnings = FALSE)
 
-  file.copy(path, file.path(folder, "xml", ppt))
-  file.rename(file.path(folder, "xml", ppt),
-              gsub("\\.pptx", "\\.zip", file.path(folder, "xml", ppt)))
+  file.copy(path, file.path(basepath, "xml", ppt))
+  file.rename(file.path(basepath, "xml", ppt),
+              gsub("\\.pptx", "\\.zip", file.path(basepath, "xml", ppt)))
 
-  unzip(gsub("\\.pptx", "\\.zip", file.path(folder, "xml", ppt)),
-        exdir = file.path(folder, "xml"))
+  unzip(gsub("\\.pptx", "\\.zip", file.path(basepath, "xml", ppt)),
+        exdir = file.path(basepath, "xml"))
 
-  if(file.exists(file.path(folder, "xml", "ppt", "media"))) {
-    dir.create(file.path(folder, "assets"), showWarnings = FALSE)
-    dir.create(file.path(folder, "assets", "img"), showWarnings = FALSE)
-    file.rename(file.path(folder, "xml", "ppt", "media"),
-                file.path(folder, "assets", "img"))
+  if(file.exists(file.path(basepath, "xml", "ppt", "media"))) {
+    dir.create(file.path(basepath, "assets"), showWarnings = FALSE)
+    dir.create(file.path(basepath, "assets", "img"), showWarnings = FALSE)
+    file.rename(file.path(basepath, "xml", "ppt", "media"),
+                file.path(basepath, "assets", "img"))
   }
-  if(file.exists(file.path(folder, "xml", "ppt", "embeddings"))) {
-    dir.create(file.path(folder, "assets", "data"), showWarnings = FALSE)
-    file.rename(file.path(folder, "xml", "ppt", "embeddings"),
-                file.path(folder, "assets", "data"))
+  if(file.exists(file.path(basepath, "xml", "ppt", "embeddings"))) {
+    dir.create(file.path(basepath, "assets", "data"), showWarnings = FALSE)
+    file.rename(file.path(basepath, "xml", "ppt", "embeddings"),
+                file.path(basepath, "assets", "data"))
   }
-  rels <- list.files(file.path(folder, "xml", "ppt", "slides", "_rels"),
+  rels <- list.files(file.path(basepath, "xml", "ppt", "slides", "_rels"),
                      full.names = TRUE)
 
   invisible(file.rename(rels, substr(rels, 1, nchar(rels) - 5)))
-  invisible(file.path(folder, "xml"))
+  invisible(file.path(basepath, "xml"))
 }
 
 #' Import xml Code for PPTX Slides

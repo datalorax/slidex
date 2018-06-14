@@ -6,7 +6,7 @@
 \usage{
 convert_pptx(path, author, title = NULL, sub = NULL, date = Sys.Date(),
   theme = "default", highlightStyle = "github", force = FALSE,
-  writenotes = TRUE, out_dir = NULL)
+  writenotes = TRUE, out_dir = ".")
 }
 \arguments{
 \item{path}{Path to the Microsoft PowerPoint file}

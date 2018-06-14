@@ -15,7 +15,7 @@
 convert_pptx <- function(path, author, title = NULL, sub = NULL,
                          date = Sys.Date(), theme = "default",
                          highlightStyle = "github", force = FALSE,
-                         writenotes = TRUE, out_dir = NULL) {
+                         writenotes = TRUE, out_dir = ".") {
 
   if(!file.exists(path)) {
     stop(paste0("Cannot find file ", basename(path), " in directory",
@@ -23,24 +23,22 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
                 ". ", "Note - file paths must be specified with the '.pptx'",
                 "extension."))
   }
-  xml <- extract_xml(path, force = force)
-  on.exit(unlink(xml, recursive = TRUE), add = TRUE)
+  xml <- extract_xml(path, force = FALSE)
   folder <- gsub("\\.pptx", "", basename(path))
+  basepath <- dirname(xml)
 
-  if(!is.null(out_dir)) {
-    if(file.exists(file.path(out_dir, folder)) & force == FALSE) {
-      stop(
-        paste0(
-          "This function will create a new folder in this ",
-          "directory with the folder of the PPTX, but a folder with this ",
-          "folder already exists here. Please move/delete the folder, ",
-          "specify a new output directory with `out = 'path'`, or rerun ",
-          "with `force = TRUE` to force the function to overwrite the ",
-          "existing folder and all the files within it."
-          )
+  if(file.exists(file.path(out_dir, folder)) & force == FALSE) {
+    stop(
+      paste0(
+        "This function will create a new folder in this ",
+        "directory with the same name as the PPTX, but a folder with this ",
+        "name already exists here. Please move/delete the folder, ",
+        "specify a new output directory with `out_dir = 'path'`, or rerun ",
+        "with `force = TRUE` to force the function to overwrite the ",
+        "existing folder and all the files within it."
         )
-      }
-  }
+      )
+    }
 
   lang_return <- tryCatch(check_lang(xml), error = function(e) e)
   if(!is.null(lang_return$message)) {
@@ -56,7 +54,7 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
   slds <- slds[-1]
   rels <- rels[-1]
 
-  rmd <- file.path(folder, paste0(folder, ".Rmd"))
+  rmd <- file.path(basepath, paste0(folder, ".Rmd"))
 
   sink_error <- tryCatch(
     sink_rmd(xml, rmd, slds, rels,
@@ -70,21 +68,22 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
     stop(sink_error$message)
   }
 
-  if(length(list.files(file.path(folder, "assets"))) == 0) {
-    unlink(file.path(folder, "assets"), recursive = TRUE)
+  if(length(list.files(file.path(basepath, "assets"))) == 0) {
+    unlink(file.path(basepath, "assets"), recursive = TRUE)
   }
 
   if(writenotes) {
     write_notes(xml)
   }
-  if(!is.null(out_dir)) {
-    file.copy(folder, out_dir, recursive = TRUE)
-    unlink(folder, recursive = TRUE, force = TRUE)
-    system(paste(Sys.getenv("R_BROWSER"), file.path(out_dir, rmd)))
-  }
-  else{
-    system(paste(Sys.getenv("R_BROWSER"), rmd))
-  }
+
+  unlink(xml, recursive = TRUE)
+  file.copy(basepath, out_dir, recursive = TRUE)
+  unlink(basepath, recursive = TRUE, force = TRUE)
+
+  system(paste(Sys.getenv("R_BROWSER"),
+               file.path(out_dir,
+                         gsub("\\.Rmd", "", basename(rmd)),
+                         basename(rmd))))
 }
 
 

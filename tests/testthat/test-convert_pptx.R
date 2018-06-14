@@ -6,9 +6,6 @@ test_that("Basic files are where they're supposed to be", {
   expect_equal(file.exists("slidedemo/slidedemo.Rmd"), TRUE)
   expect_equal(dir.exists("slidedemo/assets"), TRUE)
   expect_equal(dir.exists("slidedemo/xml"), FALSE)
-
-  expect_error(convert_pptx(pptx, "Daniel"))
-  expect_equal(dir.exists("xml"), FALSE)
 })
 
 unlink("slidedemo", recursive = TRUE, force = TRUE)
