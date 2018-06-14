@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{import_rel_xml}
 \alias{import_rel_xml}
-\title{Import xml \code{rel} Code from PPTX}
+\title{Import xml \code{rel} code from pptx}
 \usage{
 import_rel_xml(xml_folder)
 }
@@ -11,6 +11,6 @@ import_rel_xml(xml_folder)
 created from \code{\link{extract_xml}}.}
 }
 \description{
-Import xml \code{rel} Code from PPTX
+Import xml \code{rel} code from pptx
 }
 \keyword{internal}

@@ -11,7 +11,7 @@ convert_pptx(path, author, title = NULL, sub = NULL, date = Sys.Date(),
 \arguments{
 \item{path}{Path to the Microsoft PowerPoint file}
 
-\item{author}{A string indicating th author or authors of the slide deck.
+\item{author}{A string indicating the author or authors of the slide deck.
 Multiple authors can be provided with a string vector.}
 
 \item{title}{Optional title of the slide deck. Defaults to the title of the

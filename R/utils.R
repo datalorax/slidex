@@ -58,7 +58,7 @@ extract_xml <- function(path, force = FALSE) {
   invisible(file.path(basepath, "xml"))
 }
 
-#' Import xml Code for PPTX Slides
+#' Import xml code for pptx slides
 #'
 #' @param xml_folder The folder containing all of the xml code from the pptx,
 #' created from \code{\link{extract_xml}}.
@@ -82,7 +82,7 @@ import_slide_xml <- function(xml_folder) {
   slds[order]
 }
 
-#' Import xml \code{rel} Code from PPTX
+#' Import xml \code{rel} code from pptx
 #'
 #' @param xml_folder The folder containing all of the xml code from the pptx,
 #' created from \code{\link{extract_xml}}.
@@ -111,7 +111,7 @@ extract_class <- function(sld) {
     map_chr(~xml_attr(., "type"))
 }
 
-#' Extract Slide Title
+#' Extract slide title
 #'
 #' @param sld xml code for the slide to extract the title from
 #'
@@ -158,7 +158,7 @@ max_amount <- function(x) {
 
 #' Extract the body of the slide
 #'
-#' @param sld xml code for the slide to extract the title from
+#' @param sld xml code for the slide to extract the body from
 #'
 #' @keywords internal
 
@@ -272,12 +272,12 @@ extract_footnote <- function(sld) {
 # from command line
 # libreoffice --headless --convert-to png image.emf
 
-#' Extract Attributes from the corresponding slide
+#' Extract attributes from the corresponding slide
 #'
 #' @param rel xml \code{rel} code for the slide
-#' @param attr Attribute to extract. Currently takes two valide arguments:
+#' @param attr Attribute to extract. Currently takes two valid arguments:
 #'   \code{"image"} or \code{"link"} to extract images or links, respectively.
-#' @param sld xml code for the slide to extract the title from
+#' @param sld xml code for the slide to extract the attribute from
 #' @keywords internal
 
 # xml_folder will need to be another argument if the commented code below is
@@ -360,7 +360,7 @@ extract_image <- function(sld, rel) {
 
 #' Extract tables from slides
 #'
-#' @param sld xml code for the slide to extract the title from
+#' @param sld xml code for the slide to extract the table from
 #' @return a \code{data.frame} with the data from the table. Generally fed to
 #'   \code{\link{tribble_code}}.
 #'
@@ -385,7 +385,7 @@ extract_table <- function(sld) {
   df
 }
 
-#' Wrap a DF in \code{tibble::tribble} Code
+#' Wrap a DF in \code{tibble::tribble} code
 #'
 #' @param df A \code{data.frame}, typically the output from
 #'   \code{\link{extract_table}}.
@@ -423,7 +423,7 @@ import_notes_xml <- function(xml_folder) {
   map(list.files(notes_folder, "\\.xml", full.names = TRUE), read_xml)
 }
 
-#' Function to pull notes from a slide
+#' Function to extract notes from a slide
 #'
 #' @param notes A list of the xml code with all the notes for all slides
 #' @param sld_num The specific slide number to pull the notes from
@@ -478,11 +478,11 @@ write_notes <- function(xml_folder) {
   sink()
 }
 
-#' Create the \href{https://github.com/yihui/xaringan}{xaringan} YAML Front
-#' Matter
+#' Create the \href{https://github.com/yihui/xaringan}{xaringan} YAML front
+#' matter
 #'
-#' @param title_sld The xml code for the title slide in the PPTX.
-#' @param author A string indicating th author or authors of the slide deck.
+#' @param title_sld The xml code for the title slide in the pptx.
+#' @param author A string indicating the author or authors of the slide deck.
 #'   Multiple authors can be provided with a string vector.
 #' @param title Optional title of the slide deck. Defaults to the title of the
 #'   first slide in the deck.

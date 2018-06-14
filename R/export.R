@@ -88,5 +88,3 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
                          gsub("\\.Rmd", "", basename(rmd)),
                          basename(rmd))))
 }
-
-

@@ -7,7 +7,7 @@
 extract_table(sld)
 }
 \arguments{
-\item{sld}{xml code for the slide to extract the title from}
+\item{sld}{xml code for the slide to extract the table from}
 }
 \value{
 a \code{data.frame} with the data from the table. Generally fed to

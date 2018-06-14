@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{extract_title}
 \alias{extract_title}
-\title{Extract Slide Title}
+\title{Extract slide title}
 \usage{
 extract_title(sld)
 }
@@ -10,6 +10,6 @@ extract_title(sld)
 \item{sld}{xml code for the slide to extract the title from}
 }
 \description{
-Extract Slide Title
+Extract slide title
 }
 \keyword{internal}
