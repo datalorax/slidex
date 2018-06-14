@@ -16,7 +16,11 @@ Description: This package is designed to extract information from Microsoft
   links. Tables are also generally maintained, although they may require some
   manual editing if complex spanner heads and merged cells were used in the 
   original table. Nested bulleted lists should also be maintained.
-Authors@R: person("Daniel", "Anderson", email = "daniela@uoregon.edu", role = c("aut", "cre"))
+Authors@R: c(
+    person("Daniel", "Anderson", email = "daniela@uoregon.edu", role = c("aut", "cre")),
+    person("Patrick", "Kennedy", email = "pkqstr@protonmail.com", role = c("ctb"),
+           comment = c(ORCID = "0000-0002-5525-3983"))
+  )
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -51,5 +51,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Daniel Anderson \email{daniela@uoregon.edu}
 
+Other contributors:
+\itemize{
+  \item Patrick Kennedy \email{pkqstr@protonmail.com} (0000-0002-5525-3983) [contributor]
+}
+
 }
 \keyword{internal}
