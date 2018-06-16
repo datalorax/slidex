@@ -12,7 +12,7 @@
 #'   and corresponding assets. Defaults to the current working directory.
 #' @export
 #'
-convert_pptx <- function(path, author, title = NULL, sub = NULL,
+convert_pptx <- function(path, author = NULL, title = NULL, sub = NULL,
                          date = Sys.Date(), theme = "default",
                          highlightStyle = "github", force = FALSE,
                          writenotes = TRUE, out_dir = ".") {
@@ -23,7 +23,7 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
                 ". ", "Note - file paths must be specified with the '.pptx'",
                 "extension."))
   }
-  xml <- extract_xml(path, force = FALSE)
+  xml <- extract_xml(path, force = force)
   folder <- gsub("\\.pptx", "", basename(path))
   basepath <- dirname(xml)
 
@@ -43,7 +43,7 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
     unlink(file.path(out_dir, folder, recursive = TRUE, force = TRUE))
   }
 
-  lang_return <- tryCatch(check_lang(xml), error = function(e) e)
+  lang_return <- withCallingHandlers(check_lang(xml), error = function(e) e)
   if(!is.null(lang_return$message)) {
     unlink("assets", recursive = TRUE)
     stop(lang_return$message)
@@ -59,8 +59,8 @@ convert_pptx <- function(path, author, title = NULL, sub = NULL,
 
   rmd <- file.path(basepath, paste0(folder, ".Rmd"))
 
-  sink_error <- tryCatch(
-    sink_rmd(xml, rmd, slds, rels,
+  sink_error <- withCallingHandlers(
+    write_rmd(xml, rmd, slds, rels,
              title_sld, author, title, sub, date, theme,
              highlightStyle),
     error = function(e) e
