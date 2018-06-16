@@ -2,19 +2,20 @@
 % Please edit documentation in R/utils.R
 \name{extract_notes}
 \alias{extract_notes}
-\title{Function to extract notes from a slide}
+\title{Extract Notes from Slides}
 \usage{
 extract_notes(notes, sld_num, inslides = TRUE)
 }
 \arguments{
-\item{notes}{A list of the xml code with all the notes for all slides}
+\item{notes}{A list of the xml code with all the notes for all slides
+(e.g., the results of \code{import_notes_xml})}
 
-\item{sld_num}{The specific slide number to pull the notes from}
+\item{sld_num}{Numeric. The specific slide number to pull the notes from}
 
 \item{inslides}{Logical. Should the notes be embedded in the slides?
 Defaults to \code{TRUE}.}
 }
 \description{
-Function to extract notes from a slide
+Extract Notes from Slides
 }
 \keyword{internal}

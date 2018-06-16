@@ -4,15 +4,16 @@
 \alias{convert_pptx}
 \title{Extract xml from pptx}
 \usage{
-convert_pptx(path, author, title = NULL, sub = NULL, date = Sys.Date(),
-  theme = "default", highlightStyle = "github", force = FALSE,
-  writenotes = TRUE, out_dir = ".")
+convert_pptx(path, author = NULL, title = NULL, sub = NULL,
+  date = Sys.Date(), theme = "default", highlightStyle = "github",
+  force = FALSE, writenotes = TRUE, out_dir = ".")
 }
 \arguments{
 \item{path}{Path to the Microsoft PowerPoint file}
 
-\item{author}{A string indicating the author or authors of the slide deck.
-Multiple authors can be provided with a string vector.}
+\item{author}{Optional string indicating the author or authors of the slide.
+Defaults to the listed creator of the pptx.Multiple authors can be
+provided with a string vector.}
 
 \item{title}{Optional title of the slide deck. Defaults to the title of the
 first slide in the deck.}
