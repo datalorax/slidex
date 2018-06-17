@@ -13,11 +13,12 @@ xml_tibble <- function(sld) {
     return()
   }
 
-  tbl <- tibble(sps = unlist(map2(seq_along(aps),
+  tbl <- tibble(sp = unlist(map2(seq_along(aps),
                                map_dbl(aps, length),
                                ~rep(.x, .y))),
-         aps = unlist(map(aps, seq_along)),
-         type = map2_chr(nvpr_name, aps, ~rep(.x, length(.y)))) %>%
+                ap = unlist(map(aps, seq_along)),
+                type = unlist(map2(nvpr_name, aps,
+                            ~rep(.x, length(.y))))) %>%
     bind_cols(tibble(xml = unlist(aps, recursive = FALSE)))
 
   tbl$type <- gsub("[^content].+", "", tolower(tbl$type))
@@ -132,10 +133,10 @@ insert_bullets <- function(indented) {
                                                       collapse = ""),
                                                "+ ")),
            spaces = ifelse(.data$bullet == 0, "", .data$spaces),
-           text   = paste0(.data$spaces, .data$text))
+           nchar  = map_chr(.data$text, nchar),
+           text   = paste0(.data$spaces, .data$text)) %>%
+    subset(nchar != "0")
 }
-
-
 
 #' Text to paste
 #' @param text the text to paste into a string
@@ -155,7 +156,6 @@ body_text <- function(text) {
 #' @param sld xml code for the slide to extract the body from
 #'
 #' @keywords internal
-
 extract_body <- function(sld) {
   xml_tibble(sld) %>%
     extract_text() %>%
@@ -165,3 +165,4 @@ extract_body <- function(sld) {
     insert_bullets() %>%
     body_text()
 }
+
