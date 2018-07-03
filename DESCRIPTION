@@ -1,5 +1,5 @@
 Package: slidex
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Title: Convert Microsoft PowerPoint Slides to R Markdown
 Description: This package is designed to extract information from Microsoft 
     PowerPoint slides, and then put that information into an R Markdown document 
