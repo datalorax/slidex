@@ -304,11 +304,17 @@ tribble_code <- function(df, tbl_num = "") {
 
 import_notes_xml <- function(xml_folder) {
   notes_folder <- file.path(xml_folder, "ppt", "notesSlides")
-  if(!dir.exists(notes_folder)) {
+  if (!dir.exists(notes_folder)) {
     return()
   }
 
-  map(list.files(notes_folder, "\\.xml", full.names = TRUE), read_xml)
+  fnames <- list.files(notes_folder, "\\.xml", full.names = TRUE)
+  res <- map(fnames, read_xml)
+  note_num <- sub("notesSlide", "", basename(fnames))
+  note_num <- sub("[.]xml$", "", note_num)
+  note_num <- gsub("(\\d*)", "\\1", note_num)
+  names(res) <- note_num
+  res
 }
 
 #' Function to extract notes from a slide
@@ -322,10 +328,27 @@ import_notes_xml <- function(xml_folder) {
 
 extract_notes <- function(notes, sld_num, inslides = TRUE) {
 
-  sld_notes_num <- map_dbl(notes,
+  sld_notes_num <- names(notes)
+  if (length(sld_notes_num) != length(notes)) {
+    sld_notes_num <- NULL
+  }
+  # if using new import_notes_xml - should be OK
+  # Should fix #16
+  if (!is.null(sld_notes_num)) {
+    suppressWarnings({
+      sld_notes_num <- as.numeric(sld_notes_num)
+    })
+    get_notes_num <- any(is.na(sld_notes_num))
+  } else {
+    get_notes_num <- TRUE
+  }
+
+  if (get_notes_num) {
+    sld_notes_num <- map_dbl(notes,
                        ~xml_find_all(., "//p:txBody/a:p/a:fld/a:t") %>%
                          xml_text(.) %>%
                          as.numeric())
+  }
 
   if(!(sld_num %in% sld_notes_num)) {
     return()
