@@ -1,6 +1,6 @@
 context("test-convert_pptx.R")
 path <- system.file("examples", "slidedemo.pptx", package = "slidex")
-out <- convert_pptx(path, "Daniel")
+out <- convert_pptx(path)
 
 test_that("Basic files are where they're supposed to be", {
   expect_equal(file.exists("slidedemo/slidedemo.Rmd"), TRUE)

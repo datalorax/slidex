@@ -2,15 +2,15 @@
 % Please edit documentation in R/utils.R
 \name{import_rel_xml}
 \alias{import_rel_xml}
-\title{Import xml \code{rel} code from pptx}
+\title{Import XML \code{rel} Code from PowerPoint}
 \usage{
 import_rel_xml(xml_folder)
 }
 \arguments{
-\item{xml_folder}{The folder containing all of the xml code from the pptx,
+\item{xml_folder}{The folder containing all of the xml code from the pptx.
 created from \code{\link{extract_xml}}.}
 }
 \description{
-Import xml \code{rel} code from pptx
+Import XML \code{rel} Code from PowerPoint
 }
 \keyword{internal}
