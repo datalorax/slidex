@@ -445,20 +445,22 @@ sink_rmd <- function(xml_folder, rmd, slds, rels,
   sld_notes <- import_notes_xml(xml_folder)
 
   sink(rmd)
-    cat(
-      create_yaml(title_sld, author, title, sub, date, theme, highlightStyle)
-    )
-    pmap(list(.x = slds, .y = rels, .z = seq_along(slds)),
-        function(.x, .y, .z)
-        cat("\n---",
-            extract_title(.x),
-            extract_body(.x),
-            tribble_code(extract_table(.x), tbl_num = .z),
-            extract_image(.x, .y),
-            extract_attr(.y, "link", .x),
-            extract_footnote(.x),
-            extract_notes(sld_notes, .z + 1),
-            sep = "\n")
-      )
-  sink()
+  cat(
+    create_yaml(title_sld, author, title, sub, date, theme, highlightStyle)
+  )
+  pmap(list(.x = slds, .y = rels, .z = seq_along(slds)),
+       function(.x, .y, .z)
+         cat("\n---",
+             extract_title(.x),
+             extract_body(.x),
+             tribble_code(extract_table(.x), tbl_num = .z),
+             extract_image(.x, .y),
+             extract_attr(.y, "link", .x),
+             extract_footnote(.x),
+             extract_notes(sld_notes, .z + 1),
+             sep = "\n")
+  )
+  on.exit({
+    sink()
+  })
 }
