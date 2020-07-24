@@ -64,8 +64,7 @@ create_yaml <- function(xml_folder, title_sld, author = NULL, title = NULL,
 
   if(theme != "default") {
     css  <- write_theme(theme)
-  }
-  else{
+  } else {
     css <- NULL
   }
 
