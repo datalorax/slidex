@@ -5,9 +5,16 @@
 \title{Create the \href{https://github.com/yihui/xaringan}{xaringan} YAML Front
 Matter}
 \usage{
-create_yaml(xml_folder, title_sld, author = NULL, title = NULL,
-  sub = NULL, date = Sys.Date(), theme = "default",
-  highlightStyle = "github")
+create_yaml(
+  xml_folder,
+  title_sld,
+  author = NULL,
+  title = NULL,
+  sub = NULL,
+  date = Sys.Date(),
+  theme = "default",
+  highlightStyle = "github"
+)
 }
 \arguments{
 \item{xml_folder}{The folder containing all of the xml code from the pptx.}

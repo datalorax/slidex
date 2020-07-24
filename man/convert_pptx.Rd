@@ -4,9 +4,18 @@
 \alias{convert_pptx}
 \title{Extract xml from pptx}
 \usage{
-convert_pptx(path, author = NULL, title = NULL, sub = NULL,
-  date = Sys.Date(), theme = "default", highlightStyle = "github",
-  force = FALSE, writenotes = TRUE, out_dir = ".")
+convert_pptx(
+  path,
+  author = NULL,
+  title = NULL,
+  sub = NULL,
+  date = Sys.Date(),
+  theme = "default",
+  highlightStyle = "github",
+  force = FALSE,
+  writenotes = TRUE,
+  out_dir = "."
+)
 }
 \arguments{
 \item{path}{Path to the Microsoft PowerPoint file}

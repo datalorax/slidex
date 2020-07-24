@@ -42,7 +42,7 @@ Imports:
     tibble,
     tidyr,
     xml2
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1
 Suggests: 
     covr,
     kableExtra,
