@@ -93,7 +93,7 @@ import_rel_xml <- function(xml_folder) {
         file.path(xml_folder, "ppt", "slides"),
         pattern = "\\.xml"))
 
-   order <- strsplit(names(rels), "/") %>%
+  order <- strsplit(names(rels), "/") %>%
     map_chr(~.[length(.)]) %>%
     gsub("[^[:digit:]]", "", .) %>%
     as.numeric() %>%
@@ -205,13 +205,11 @@ extract_notes <- function(notes, sld_num, inslides = TRUE) {
   if(any(!map_dbl(catch, length) > 0)) {
     return()
   }
-    sld_notes_num <- map_dbl(notes,
   sld_notes_num <- names(notes)
   if (length(sld_notes_num) != length(notes)) {
     sld_notes_num <- NULL
   }
-  # if using new import_notes_xml - should be OK
-  # Should fix #16
+
   if (!is.null(sld_notes_num)) {
     suppressWarnings({
       sld_notes_num <- as.numeric(sld_notes_num)
@@ -223,9 +221,9 @@ extract_notes <- function(notes, sld_num, inslides = TRUE) {
 
   if (get_notes_num) {
     sld_notes_num <- map_dbl(notes,
-                       ~xml_find_all(., "//p:txBody/a:p/a:fld/a:t") %>%
-                         xml_text(.) %>%
-                         as.numeric())
+                             ~xml_find_all(., "//p:txBody/a:p/a:fld/a:t") %>%
+                               xml_text(.) %>%
+                               as.numeric())
   }
 
   if(!(sld_num %in% sld_notes_num)) {
@@ -255,22 +253,22 @@ extract_notes <- function(notes, sld_num, inslides = TRUE) {
 write_notes <- function(xml_folder) {
   notes <- import_notes_xml(xml_folder)
   n_slides <- length(
-                     list.files(file.path(xml_folder, "ppt", "slides"),
-                                "\\.xml")
-                     )
+    list.files(file.path(xml_folder, "ppt", "slides"),
+               "\\.xml")
+  )
   folder <- map_chr(strsplit(dirname(xml_folder), "/"), ~.[[length(.)]])
   notes_out <- file.path(dirname(xml_folder),
                          paste0(folder, "-notes.txt"))
   sink(notes_out)
-    map(seq_len(n_slides),
-        ~paste0("\n",
-                "---",
-                "#", .,
-                "\n",
-                extract_notes(notes, ., inslides = FALSE),
-                collapse = "\n")) %>%
-      paste0(collapse = "\n") %>%
-      cat()
+  map(seq_len(n_slides),
+      ~paste0("\n",
+              "---",
+              "#", .,
+              "\n",
+              extract_notes(notes, ., inslides = FALSE),
+              collapse = "\n")) %>%
+    paste0(collapse = "\n") %>%
+    cat()
   sink()
 }
 
@@ -285,27 +283,27 @@ write_notes <- function(xml_folder) {
 #' @keywords internal
 
 write_rmd <- function(xml_folder, rmd, slds, rels,
-                     title_sld, author, title, sub, date, theme,
-                     highlightStyle) {
+                      title_sld, author, title, sub, date, theme,
+                      highlightStyle) {
 
   sld_notes <- import_notes_xml(xml_folder)
 
   sink(rmd)
-    cat(
-      create_yaml(xml_folder, title_sld, author, title, sub, date, theme,
-                  highlightStyle)
-    )
-    pmap(list(.x = slds, .y = rels, .z = seq_along(slds)),
-        function(.x, .y, .z)
-        cat("\n---",
-            extract_title(.x),
-            extract_body(.x),
-            tribble_code(extract_table(.x), tbl_num = .z),
-            extract_image(.x, .y),
-            extract_link(.x, .y),
-            extract_footnote(.x),
-            extract_notes(sld_notes, .z + 1),
-            sep = "\n")
-      )
-    on.exit(sink())
+  cat(
+    create_yaml(xml_folder, title_sld, author, title, sub, date, theme,
+                highlightStyle)
+  )
+  pmap(list(.x = slds, .y = rels, .z = seq_along(slds)),
+       function(.x, .y, .z)
+         cat("\n---",
+             extract_title(.x),
+             extract_body(.x),
+             tribble_code(extract_table(.x), tbl_num = .z),
+             extract_image(.x, .y),
+             extract_link(.x, .y),
+             extract_footnote(.x),
+             extract_notes(sld_notes, .z + 1),
+             sep = "\n")
+  )
+  on.exit(sink())
 }
