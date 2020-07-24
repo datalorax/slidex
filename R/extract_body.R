@@ -42,9 +42,9 @@ extract_text <- function(xml_tibble) {
 stylize_text <- function(text) {
   if(is.null(text)) return()
   style <- text %>%
-    mutate(bold = map(xml, ~xml_find_all(., "./a:r") %>%
+    mutate(bold = map(.data$xml, ~xml_find_all(., "./a:r") %>%
                         map(., ~grepl('a:rPr b="1"', .x))),
-           ital = map(xml, ~xml_find_all(., "./a:r") %>%
+           ital = map(.data$xml, ~xml_find_all(., "./a:r") %>%
                         map(., ~grepl('a:rPr i="1"', .x))))
 
   style %>%
