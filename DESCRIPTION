@@ -1,5 +1,5 @@
 Package: slidex
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Title: Convert Microsoft PowerPoint Slides to R Markdown
 Description: This package is designed to extract information from Microsoft 
     PowerPoint slides, and then put that information into an R Markdown document 
@@ -21,7 +21,12 @@ Description: This package is designed to extract information from Microsoft
 Authors@R: c(
     person("Daniel", "Anderson", email = "daniela@uoregon.edu", role = c("aut", "cre")),
     person("Patrick", "Kennedy", email = "pkqstr@protonmail.com", role = c("ctb"),
-           comment = c(ORCID = "0000-0002-5525-3983"))
+           comment = c(ORCID = "0000-0002-5525-3983")),
+    person(given = "John",
+           family = "Muschelli",
+           email = "muschellij2@gmail.com",
+           role = c("ctb"),
+           comment = c(ORCID = "0000-0001-6469-1750"))
   )
 License: MIT + file LICENSE
 Encoding: UTF-8
