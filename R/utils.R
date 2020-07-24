@@ -194,8 +194,12 @@ import_notes_xml <- function(xml_folder) {
 #' @keywords internal
 
 extract_notes <- function(notes, sld_num, inslides = TRUE) {
+  catch <- map(notes, ~xml_find_all(., "//p:txBody/a:p/a:fld/a:t"))
 
-  sld_notes_num <- map_dbl(notes,
+  if(any(!map_dbl(catch, length) > 0)) {
+    return()
+  }
+    sld_notes_num <- map_dbl(notes,
                        ~xml_find_all(., "//p:txBody/a:p/a:fld/a:t") %>%
                          xml_text(.) %>%
                          as.numeric())
@@ -204,6 +208,8 @@ extract_notes <- function(notes, sld_num, inslides = TRUE) {
     return()
   }
   note <- notes[sld_num == sld_notes_num][[1]]
+  note <- note[map_dbl(catch, length) > 0]
+
   note_text <- xml_find_all(note, "//p:txBody/a:p/a:r") %>%
     xml_text(trim = TRUE) %>%
     paste0(collapse = " ")
