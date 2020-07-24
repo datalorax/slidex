@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{extract_xml}
 \alias{extract_xml}
-\title{Extract xml from pptx}
+\title{Extract XML from PowerPoint}
 \usage{
 extract_xml(path, force = FALSE)
 }
@@ -14,6 +14,6 @@ extract_xml(path, force = FALSE)
 \code{FALSE}.}
 }
 \description{
-Extract xml from pptx
+Extract XML from PowerPoint
 }
 \keyword{internal}

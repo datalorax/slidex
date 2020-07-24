@@ -20,7 +20,7 @@
 #'
 #' @keywords internal
 #' @importFrom xml2 read_xml xml_find_all xml_attr xml_text xml_children
-#' @importFrom purrr map map2 map_dbl map_chr map_df pmap map_lgl
+#' @importFrom purrr map map2 map_dbl map_chr map_df pmap map_lgl map2_chr
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate bind_cols select group_by ungroup lag
 #' @importFrom tibble tibble
