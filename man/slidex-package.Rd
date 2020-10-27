@@ -37,7 +37,8 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item Patrick Kennedy \email{pkqstr@protonmail.com} (0000-0002-5525-3983) [contributor]
+  \item Patrick Kennedy \email{pkqstr@protonmail.com} (\href{https://orcid.org/0000-0002-5525-3983}{ORCID}) [contributor]
+  \item John Muschelli \email{muschellij2@gmail.com} (\href{https://orcid.org/0000-0001-6469-1750}{ORCID}) [contributor]
 }
 
 }

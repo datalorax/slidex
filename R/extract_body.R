@@ -38,30 +38,28 @@ extract_text <- function(xml_tibble) {
 #' @param text data frame output from extract_text
 #' @keywords internal
 #'
+
 stylize_text <- function(text) {
   if(is.null(text)) return()
   style <- text %>%
-    mutate(style = map(.data$xml, ~xml_find_all(., "./a:r/a:rPr")),
-           bold  = map(.data$style, ~ifelse(is.na(xml_attr(., "b")),
-                                    "0",
-                                    xml_attr(., "b"))),
-           ital  = map(.data$style, ~ifelse(is.na(xml_attr(., "i")),
-                                    "0",
-                                    xml_attr(., "i"))))
+    mutate(bold = map(.data$xml, ~xml_find_all(., "./a:r") %>%
+                        map(., ~grepl('a:rPr b="1"', .x))),
+           ital = map(.data$xml, ~xml_find_all(., "./a:r") %>%
+                        map(., ~grepl('a:rPr i="1"', .x))))
 
   style %>%
     mutate(text = map2(.data$text, .data$bold,
                        ~map2(.x, .y,
-                             ~ifelse(.y == "1",
+                             ~ifelse(.y,
                                      paste0("**", .x, "**"),
                                      .x))),
            text = map2(.data$text, .data$ital,
                        ~map2(.x, .y,
-                             ~ifelse(.y == "1",
+                             ~ifelse(.y,
                                      paste0("*", .x, "*"),
                                      .x))),
            text = map(.data$text, ~paste(., collapse = " "))) %>%
-    select(-.data$style, -.data$bold, -.data$ital)
+    select(-.data$bold, -.data$ital)
 }
 
 #' Check bullets before text
@@ -156,6 +154,7 @@ body_text <- function(text) {
 #' @param sld xml code for the slide to extract the body from
 #'
 #' @keywords internal
+
 extract_body <- function(sld) {
   xml_tibble(sld) %>%
     extract_text() %>%

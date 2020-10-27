@@ -4,8 +4,19 @@
 \alias{write_rmd}
 \title{Write Out the \href{https://github.com/yihui/xaringan}{xaringan} RMD File}
 \usage{
-write_rmd(xml_folder, rmd, slds, rels, title_sld, author, title, sub, date,
-  theme, highlightStyle)
+write_rmd(
+  xml_folder,
+  rmd,
+  slds,
+  rels,
+  title_sld,
+  author,
+  title,
+  sub,
+  date,
+  theme,
+  highlightStyle
+)
 }
 \arguments{
 \item{xml_folder}{The folder containing all of the xml code from the pptx}

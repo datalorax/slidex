@@ -230,7 +230,6 @@ extract_notes <- function(notes, sld_num, inslides = TRUE) {
     return()
   }
   note <- notes[sld_num == sld_notes_num][[1]]
-  note <- note[map_dbl(catch, length) > 0]
 
   note_text <- xml_find_all(note, "//p:txBody/a:p/a:r") %>%
     xml_text(trim = TRUE) %>%
