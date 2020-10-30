@@ -143,7 +143,7 @@ body_text <- function(text) {
   if(is.null(text)) return()
   pasted <- text %>%
     select(.data$text) %>%
-    unnest()
+    unnest(cols = c())
   pasted <- map(pasted, ~.[. != "\n"])
 
   paste0(pasted$text, collapse = "\n")
