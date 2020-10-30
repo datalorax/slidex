@@ -26,7 +26,12 @@ Authors@R: c(
            family = "Muschelli",
            email = "muschellij2@gmail.com",
            role = c("ctb"),
-           comment = c(ORCID = "0000-0001-6469-1750"))
+           comment = c(ORCID = "0000-0001-6469-1750")),
+    person(given = "Robert",
+           family = "McDonald",
+           email = "rmcd1024@gmail.com:q",
+           role = c("ctb"),
+           comment = c(ORCID = "0000-0002-2390-8455"))
   )
 License: MIT + file LICENSE
 Encoding: UTF-8
